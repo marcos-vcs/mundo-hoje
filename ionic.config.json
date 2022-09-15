@@ -1,0 +1,7 @@
+{
+  "name": "mundo-hoje",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
