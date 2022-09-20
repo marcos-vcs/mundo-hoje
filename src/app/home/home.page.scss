@@ -1,3 +1,7 @@
+*{
+  font-family: 'Open Sans', sans-serif;
+}
+
 #container {
   text-align: center;
 
@@ -24,4 +28,17 @@
 
 #container a {
   text-decoration: none;
+}
+
+ion-title{
+  text-align: center;
+  margin: auto;
+  font-size: 14px;
+  font-weight: bold;
+}
+ion-title img{
+  vertical-align: middle;
+  padding-right: 2px;
+  position: relative;
+  width: 25px;
 }
