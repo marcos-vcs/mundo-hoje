@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { toastController } from '@ionic/core';
 import { AlertService } from '../components/tools/alert.service';
 import { ToastService } from '../components/tools/toast.service';
-import { IbgeNoticeApiServiceService } from '../services/ibge-notice-api-service.service';
+import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
@@ -22,7 +22,7 @@ export class HomePage implements OnInit {
   private page = 0;
   //#endregion
 
-  constructor(private noticeService: IbgeNoticeApiServiceService) {
+  constructor(private noticeService: IbgeNoticeApiService) {
     this.notice.items = [];
   }
 

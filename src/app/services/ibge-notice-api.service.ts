@@ -7,7 +7,7 @@ import { Notice, Photos } from '../models/notice';
 @Injectable({
   providedIn: 'root'
 })
-export class IbgeNoticeApiServiceService {
+export class IbgeNoticeApiService {
 
   constructor(private http: HttpClient) { }
 
