@@ -16,10 +16,9 @@ export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   notice: Notice = new Notice();
-  loadDown = false;
   loadCenter = false;
-  private limit = 10;
-  private page = 0;
+  private readonly limit = 10;
+  private page = 1;
   //#endregion
 
   constructor(private noticeService: IbgeNoticeApiService) {
@@ -31,6 +30,7 @@ export class HomePage implements OnInit {
   }
 
   getNotices(){
+    console.log(this.page);
     this.noticeService.get(this.page, this.limit).subscribe(
       (response) => {
 
@@ -49,7 +49,6 @@ export class HomePage implements OnInit {
         this.notice.showingTo = response.showingTo;
         this.notice.totalPages = response.totalPages;
 
-        console.log(this.notice);
       },
       (error) => {
         console.log(error);
@@ -70,6 +69,15 @@ export class HomePage implements OnInit {
 
   toggleInfiniteScroll() {
     this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
+  }
+
+  doRefresh(event) {
+    setTimeout(() => {
+      this.page = 1;
+      this.notice.items = [];
+      this.getNotices();
+      event.target.complete();
+    }, 500);
   }
 
 }

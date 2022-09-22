@@ -20,11 +20,11 @@ export class IbgeNoticeApiService {
   }
 
   get(page: number, limit: number): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&pagina=${page}`);
+    return this.http.get<Notice>(`${environment.ibgeApi}/?page=${page}&qtd=${limit}`);
   }
 
   find(page: number, limit: number, findBy: string): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&pagina=${page}&busca=${findBy}`);
+    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}&busca=${findBy}`);
   }
 
   getByDate(initial: Date, final: Date){
