@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { toastController } from '@ionic/core';
+import { AlertService } from '../components/tools/alert.service';
+import { ToastService } from '../components/tools/toast.service';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +10,6 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  constructor(private toast: ToastService) {}
 
 }
