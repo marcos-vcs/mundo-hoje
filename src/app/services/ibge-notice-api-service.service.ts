@@ -2,7 +2,7 @@ import { environment } from './../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Notice } from '../models/notice';
+import { Notice, Photos } from '../models/notice';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +11,20 @@ export class IbgeNoticeApiServiceService {
 
   constructor(private http: HttpClient) { }
 
+  getPhotos(url: string, images: string){
+    const baseUrl = url.split('/')[0] + url.split('/')[1] + '//' + url.split('/')[2];
+    const photos = new Photos();
+    photos.image_fulltext = baseUrl + '/' + JSON.parse(images).image_fulltext;
+    photos.image_intro = baseUrl + '/' + JSON.parse(images).image_intro;
+    return photos;
+  }
+
   get(page: number, limit: number): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}`);
+    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&pagina=${page}`);
   }
 
   find(page: number, limit: number, findBy: string): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}&busca=${findBy}`);
+    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&pagina=${page}&busca=${findBy}`);
   }
 
   getByDate(initial: Date, final: Date){

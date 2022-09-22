@@ -11,11 +11,31 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <ion-card *ngFor="let item of notice.items">
+    <ion-item>
+      <img [src]="item.photos.image_intro" width="100%">
+    </ion-item>
+
+    <ion-card-title>
+      {{item.introducao}}
+    </ion-card-title>
+  </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <ion-content *ngIf="loadCenter">
+    <ion-spinner class="spinnerCenter" name="dots"></ion-spinner>
+  </ion-content>
+
+  <ion-content *ngIf="loadDown">
+    <ion-spinner class="spinnerDown" name="bubbles"></ion-spinner>
+  </ion-content>
 
   <div id="container">
 

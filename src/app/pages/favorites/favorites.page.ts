@@ -6,6 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
+  //#region variaveis
+  loadDown = false;
+  loadCenter = false;
+  //#endregion
 
   constructor() { }
 
