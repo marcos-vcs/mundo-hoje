@@ -4,8 +4,9 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { IbgeNoticeApiService } from './services/ibge-notice-api.service';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +16,8 @@ import { IbgeNoticeApiService } from './services/ibge-notice-api.service';
     AppRoutingModule,
     HttpClientModule],
   providers: [
+    DatePipe,
+    HttpClient,
     IbgeNoticeApiService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

@@ -1,8 +1,5 @@
-import { Item, Notice, Photos } from './../models/notice';
+import { Notice } from './../models/notice';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { toastController } from '@ionic/core';
-import { AlertService } from '../components/tools/alert.service';
-import { ToastService } from '../components/tools/toast.service';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import { IonInfiniteScroll } from '@ionic/angular';
 
@@ -30,10 +27,8 @@ export class HomePage implements OnInit {
   }
 
   getNotices(){
-    console.log(this.page);
     this.noticeService.get(this.page, this.limit).subscribe(
       (response) => {
-
         response.items.forEach(i => {
           if(i !== undefined){
             i.photos = this.noticeService.getPhotos(i.link, i.imagens);

@@ -20,11 +20,11 @@ export class IbgeNoticeApiService {
   }
 
   get(page: number, limit: number): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?page=${page}&qtd=${limit}`);
+    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&pagina=${page}`);
   }
 
   find(page: number, limit: number, findBy: string): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}&busca=${findBy}`);
+    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&pagina=${page}&busca=${findBy}`);
   }
 
   getByDate(initial: Date, final: Date){
@@ -40,5 +40,4 @@ export class IbgeNoticeApiService {
     day = day.length > 1 ? day : '0' + day;
     return month + '-' + day + '-' + year;
   }
-
 }
