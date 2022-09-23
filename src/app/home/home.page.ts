@@ -13,6 +13,7 @@ export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   notice: Notice = new Notice();
+  allLoads = false;
   loadCenter = false;
   private readonly limit = 10;
   private page = 1;
@@ -29,6 +30,7 @@ export class HomePage implements OnInit {
   getNotices(){
     this.noticeService.get(this.page, this.limit).subscribe(
       (response) => {
+
         response.items.forEach(i => {
           if(i !== undefined){
             i.photos = this.noticeService.getPhotos(i.link, i.imagens);
@@ -44,6 +46,12 @@ export class HomePage implements OnInit {
         this.notice.showingTo = response.showingTo;
         this.notice.totalPages = response.totalPages;
 
+        if(this.notice.totalPages === this.page){
+          this.allLoads = true;
+        }
+        else{
+          this.allLoads = false;
+        }
       },
       (error) => {
         console.log(error);

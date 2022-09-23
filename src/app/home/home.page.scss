@@ -44,14 +44,27 @@ ion-title img{
 }
 
 ion-card-title{
-  padding: 15px;
+  padding: 5px 15px;
   text-align: left;
   font-size: 14px;
 }
+ion-card-subtitle{
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 15px;
+}
 
-.spinnerDown {
-  top: 10px;
-  left: 50%;
+.allLoads{
+  padding-top: 10px;
+  text-align: center;
+  margin: auto;
+  font-size: 14px;
+}
+.notFound{
+  padding: 20% 20px;
+  font-size: 18px;
+  text-align: center;
+  margin: auto;
 }
 .spinnerCenter{
   top:50%;
