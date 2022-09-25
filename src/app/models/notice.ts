@@ -19,9 +19,16 @@ export class Item{
   produto_id: number;
   produtos: string;
   editorias: string;
-  imagens: JSON;
+  imagens: string;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   produtos_relacionados: string;
   destaque: boolean;
   link: string;
+  photos: Photos;
+}
+export class Photos{
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  image_fulltext: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  image_intro: string;
 }

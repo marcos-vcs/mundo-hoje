@@ -16,7 +16,12 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
+  <ion-content *ngIf="loadCenter">
+    <ion-spinner class="spinnerCenter" name="dots"></ion-spinner>
+  </ion-content>
 
-  </div>
+  <ion-content *ngIf="loadDown">
+    <ion-spinner class="spinnerDown" name="bubbles"></ion-spinner>
+  </ion-content>
+
 </ion-content>
