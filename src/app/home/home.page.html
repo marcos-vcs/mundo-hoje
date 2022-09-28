@@ -5,7 +5,7 @@
       Mundo hoje
     </ion-title>
 
-    <ion-searchbar animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar (ionChange)="getSearchbarValue($event)" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
@@ -16,12 +16,13 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="notFound" *ngIf="!notice.items">
+  <div class="notFound" *ngIf="!notice.items || notice.count === 0">
     Nenhuma notícia encontrada <br>
     <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
   </div>
 
-  <ion-card *ngFor="let item of notice.items">
+  <span *ngIf="!loadCenter">
+    <ion-card *ngFor="let item of notice.items">
     <ion-item>
       <img [src]="item.photos.image_intro" width="100%">
     </ion-item>
@@ -32,13 +33,14 @@
     <ion-card-title>
       {{item.introducao}}
     </ion-card-title>
-  </ion-card>
+    </ion-card>
+  </span>
 
-  <ion-content class="allLoads" *ngIf="allLoads">
+  <ion-content class="allLoads" *ngIf="allLoads && notice.count > 0">
     Todas as notícias carregadas
   </ion-content>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll *ngIf="!allLoads && !loadCenter" threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content
       loadingSpinner="dots">
     </ion-infinite-scroll-content>
@@ -48,7 +50,4 @@
     <ion-spinner class="spinnerCenter" name="dots"></ion-spinner>
   </ion-content>
 
-  <div id="container">
-
-  </div>
 </ion-content>
