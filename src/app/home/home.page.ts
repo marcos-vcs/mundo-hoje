@@ -41,7 +41,7 @@ export class HomePage implements OnInit {
     setTimeout(()=>{
       this.findNotices();
       this.loadCenter = false;
-    },500);
+    },200);
   }
 
   findNotices(){
@@ -79,7 +79,7 @@ export class HomePage implements OnInit {
             this.loadCenter = false;
           }
         );
-      },500);
+      },200);
     }else{
       this.page = 1;
       this.notice.items = [];
@@ -87,7 +87,7 @@ export class HomePage implements OnInit {
       setInterval(()=>{
         this.getNotices();
         this.loadCenter = false;
-      },500);
+      },200);
     }
   }
 
@@ -126,7 +126,7 @@ export class HomePage implements OnInit {
             this.loadCenter = false;
           }
         );
-      },500);
+      },200);
     }
   }
 
@@ -143,7 +143,7 @@ export class HomePage implements OnInit {
       }
       event.target.complete();
 
-    }, 500);
+    }, 200);
   }
 
   toggleInfiniteScroll() {
@@ -156,7 +156,7 @@ export class HomePage implements OnInit {
       this.notice.items = [];
       this.getNotices();
       event.target.complete();
-    }, 500);
+    }, 200);
   }
 
 }
