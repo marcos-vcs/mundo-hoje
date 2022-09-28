@@ -16,7 +16,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="notFound" *ngIf="!notice.items || notice.count === 0">
+  <div class="notFound" *ngIf="!notice.items || notice.count === 0 && !loadCenter">
     Nenhuma notícia encontrada <br>
     <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
   </div>
@@ -36,7 +36,7 @@
     </ion-card>
   </span>
 
-  <ion-content class="allLoads" *ngIf="allLoads && notice.count > 0">
+  <ion-content class="allLoads" *ngIf="allLoads && notice.count > 0 && !loadCenter">
     Todas as notícias carregadas
   </ion-content>
 

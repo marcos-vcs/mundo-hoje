@@ -41,12 +41,13 @@ export class HomePage implements OnInit {
     setTimeout(()=>{
       this.findNotices();
       this.loadCenter = false;
-    },200);
+    },500);
   }
 
   findNotices(){
     if(this.searchValue.length > 0){
       setTimeout(()=>{
+        this.allLoads = false;
         this.noticeService.find(this.page, this.limit, this.searchValue).subscribe(
           (response) => {
             this.notFoundMsg = false;
@@ -71,7 +72,6 @@ export class HomePage implements OnInit {
           (error) => {
             if(error.status === 0){
               this.page--;
-              this.allLoads = true;
               this.toast.presentToast('Você está sem internet :(','top','danger');
             }
 
@@ -84,7 +84,7 @@ export class HomePage implements OnInit {
       this.page = 1;
       this.notice.items = [];
       this.loadCenter = true;
-      setInterval(()=>{
+      setTimeout(()=>{
         this.getNotices();
         this.loadCenter = false;
       },200);
@@ -94,6 +94,7 @@ export class HomePage implements OnInit {
   getNotices(){
     if(this.searchValue.length === 0){
       setTimeout(()=>{
+        this.allLoads = false;
         this.noticeService.get(this.page, this.limit).subscribe(
           (response) => {
             response.items.forEach(i => {
