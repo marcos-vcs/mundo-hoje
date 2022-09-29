@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Notice } from './../models/notice';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import { IonInfiniteScroll } from '@ionic/angular';
-import { AlertService } from '../components/tools/alert.service';
 import { ToastService } from '../components/tools/toast.service';
 
 @Component({
@@ -16,9 +16,9 @@ export class HomePage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   notice: Notice = new Notice();
   searchValue = '';
-  allLoads = false;
-  loadCenter = false;
+  allLoadMsg = false;
   notFoundMsg = false;
+  loadCenter = false;
   private readonly limit = 10;
   private page = 1;
   //#endregion
@@ -34,9 +34,11 @@ export class HomePage implements OnInit {
     this.loadCenter = false;
   }
 
-  getSearchbarValue($event: any){
+  getSearchbarValue(){
     this.page = 1;
     this.notice.items = [];
+    this.notFoundMsg = false;
+    this.allLoadMsg = false;
     this.loadCenter = true;
     setTimeout(()=>{
       this.findNotices();
@@ -47,7 +49,6 @@ export class HomePage implements OnInit {
   findNotices(){
     if(this.searchValue.length > 0){
       setTimeout(()=>{
-        this.allLoads = false;
         this.noticeService.find(this.page, this.limit, this.searchValue).subscribe(
           (response) => {
             this.notFoundMsg = false;
@@ -67,7 +68,9 @@ export class HomePage implements OnInit {
             this.notice.showingTo = response.showingTo;
             this.notice.totalPages = response.totalPages;
 
-            this.allLoads = this.notice.totalPages === this.page ? true : false;
+            this.notFoundMsg = this.notice.count > 0 ? false : true;
+            this.allLoadMsg = this.notice.totalPages === this.notice.page && !this.notFoundMsg ? true : false;
+
           },
           (error) => {
             if(error.status === 0){
@@ -79,7 +82,7 @@ export class HomePage implements OnInit {
             this.loadCenter = false;
           }
         );
-      },200);
+      },100);
     }else{
       this.page = 1;
       this.notice.items = [];
@@ -87,16 +90,18 @@ export class HomePage implements OnInit {
       setTimeout(()=>{
         this.getNotices();
         this.loadCenter = false;
-      },200);
+      },100);
     }
   }
 
   getNotices(){
     if(this.searchValue.length === 0){
       setTimeout(()=>{
-        this.allLoads = false;
         this.noticeService.get(this.page, this.limit).subscribe(
           (response) => {
+            this.notFoundMsg = false;
+            this.allLoadMsg  = false;
+
             response.items.forEach(i => {
               if(i !== undefined){
                 i.photos = this.noticeService.getPhotos(i.link, i.imagens);
@@ -112,14 +117,14 @@ export class HomePage implements OnInit {
             this.notice.showingTo = response.showingTo;
             this.notice.totalPages = response.totalPages;
 
-           this.allLoads = this.notice.totalPages === this.page ? true : false;
-           this.notFoundMsg = false;
+            this.notFoundMsg = this.notice.count > 0 ? false : true;
+            this.allLoadMsg = this.notice.totalPages === this.notice.page && !this.notFoundMsg ? true : false;
 
           },
           (error) => {
             if(error.status === 0){
               this.page--;
-              this.allLoads = true;
+              this.allLoadMsg = true;
               this.toast.presentToast('Você está sem internet :(','top','danger');
             }
 
@@ -127,28 +132,18 @@ export class HomePage implements OnInit {
             this.loadCenter = false;
           }
         );
-      },200);
+      },100);
     }
   }
 
   loadData(event) {
     setTimeout(() => {
       if(this.page < this.notice.totalPages){
-        if(this.searchValue.length > 0){
-          this.page++;
-          this.findNotices();
-        }else{
-          this.page++;
-          this.getNotices();
-        }
+        this.page++;
+        this.searchValue.length > 0 ? this.findNotices() : this.getNotices();
       }
       event.target.complete();
-
-    }, 200);
-  }
-
-  toggleInfiniteScroll() {
-    this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
+    }, 100);
   }
 
   doRefresh(event) {
@@ -157,7 +152,7 @@ export class HomePage implements OnInit {
       this.notice.items = [];
       this.getNotices();
       event.target.complete();
-    }, 200);
+    }, 100);
   }
 
 }
