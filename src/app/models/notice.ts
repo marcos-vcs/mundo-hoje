@@ -25,6 +25,7 @@ export class Item{
   destaque: boolean;
   link: string;
   photos: Photos;
+  save = false;
 }
 export class Photos{
   // eslint-disable-next-line @typescript-eslint/naming-convention

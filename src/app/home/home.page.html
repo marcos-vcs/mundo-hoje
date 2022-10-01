@@ -11,11 +11,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
   <div class="notFoundMsg" *ngIf="notFoundMsg || !notice.items && (notice.count === 0 && !loadCenter)">
     Nenhuma notícia encontrada <br>
     <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
@@ -28,7 +26,23 @@
     </ion-item>
 
     <ion-card-subtitle>
-      Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
+      <div class="options-list">
+
+        <ion-button (click)="favorite(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+          <span *ngIf="item.save">
+            <ion-icon class="btn-red" name="heart"></ion-icon>
+          </span>
+          <span *ngIf="!item.save">
+            <ion-icon class="btn-gray" name="heart"></ion-icon>
+          </span>
+        </ion-button>
+
+        <ion-button hidden="true" size="small" fill="clear" shape="round">
+          <ion-icon name="share-social-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <br>Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
     </ion-card-subtitle>
     <ion-card-title>
       {{item.introducao}}

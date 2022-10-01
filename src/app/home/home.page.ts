@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { Notice } from './../models/notice';
+import { Item, Notice } from './../models/notice';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import { IonInfiniteScroll } from '@ionic/angular';
@@ -105,6 +105,7 @@ export class HomePage implements OnInit {
             response.items.forEach(i => {
               if(i !== undefined){
                 i.photos = this.noticeService.getPhotos(i.link, i.imagens);
+                i.save = false;
                 this.notice.items?.push((i));
               }
             });
@@ -153,6 +154,16 @@ export class HomePage implements OnInit {
       this.getNotices();
       event.target.complete();
     }, 100);
+  }
+
+  favorite(item: Item){
+    const index = this.notice.items.findIndex((obj => obj.id === item.id));
+    this.notice.items[index].save = item.save ? false : true;
+    if(this.notice.items[index].save){
+      this.toast.presentToast('Notícia adicionada aos itens favoritados.', 'top', 'success');
+    }else{
+      this.toast.presentToast('Notícia removida dos itens favoritados.', 'top', 'danger');
+    }
   }
 
 }
