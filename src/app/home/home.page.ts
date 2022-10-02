@@ -37,6 +37,16 @@ export class HomePage implements OnInit {
     this.storage.init();
   }
 
+  async ionViewWillEnter(){
+    this.notice.items = [];
+    this.ngOnInit();
+  }
+
+  async ionPageWillLeave(){
+    this.notice.items = [];
+    this.ngOnInit();
+  }
+
   getSearchbarValue(){
     this.page = 1;
     this.notice.items = [];

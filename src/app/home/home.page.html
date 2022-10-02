@@ -14,6 +14,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+
   <div class="notFoundMsg" *ngIf="notFoundMsg || !notice.items && (notice.count === 0 && !loadCenter)">
     Nenhuma notícia encontrada <br>
     <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
