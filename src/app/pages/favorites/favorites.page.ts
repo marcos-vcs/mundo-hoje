@@ -38,6 +38,17 @@ export class FavoritesPage implements OnInit {
     this.ngOnInit();
   }
 
+  getSearchbarValue(){
+    this.notices = [];
+    this.notFoundMsg = false;
+    this.allLoadMsg = false;
+    this.loadCenter = true;
+    setTimeout(()=>{
+      this.getNotices();
+      this.loadCenter = false;
+    },500);
+  }
+
   getNotices(){
     this.notFoundMsg = false;
     this.allLoadMsg = false;
@@ -56,6 +67,26 @@ export class FavoritesPage implements OnInit {
             this.notices?.push((i));
           }
         });
+        this.notFoundMsg = this.notices.length === 0 && !this.loadCenter ? true : false;
+        this.allLoadMsg = this.notices.length > 0 && !this.loadCenter ? true : false;
+      }, 100);
+    }else{
+      setTimeout(async ()=>{
+        await this.storage.openStore();
+        const favorites = await (await this.storage.getItem('favorites')).toString();
+        let itens: Item[] = [];
+
+        if(favorites){
+         itens =  JSON.parse(favorites) as Item[];
+        }
+
+        itens.forEach(i => {
+          if(i !== undefined){
+            this.notices?.push((i));
+          }
+        });
+        this.notices = this.notices.filter(f => f.introducao.toLowerCase()
+                                   .includes(this.searchValue.toLowerCase()));
         this.notFoundMsg = this.notices.length === 0 && !this.loadCenter ? true : false;
         this.allLoadMsg = this.notices.length > 0 && !this.loadCenter ? true : false;
       }, 100);

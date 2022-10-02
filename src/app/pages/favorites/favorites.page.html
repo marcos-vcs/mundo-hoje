@@ -4,7 +4,7 @@
       Favoritos
     </ion-title>
 
-    <ion-searchbar animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
