@@ -23,23 +23,19 @@ export class FavoritesPage implements OnInit {
 
   ngOnInit() {
     this.loadCenter = true;
-    this.getNotices();
+    setTimeout(async ()=>{this.getNotices();},200);
     this.loadCenter = false;
     this.storage.init();
   }
 
   async ionViewWillEnter(){
-    this.notices = [];
-    this.ngOnInit();
+    await this.getNotices();
   }
-
   async ionPageWillLeave(){
-    this.notices = [];
-    this.ngOnInit();
+    await this.getNotices();
   }
 
   getSearchbarValue(){
-    this.notices = [];
     this.notFoundMsg = false;
     this.allLoadMsg = false;
     this.loadCenter = true;
@@ -49,7 +45,7 @@ export class FavoritesPage implements OnInit {
     },500);
   }
 
-  getNotices(){
+  async getNotices(){
     this.notFoundMsg = false;
     this.allLoadMsg = false;
     if(this.searchValue.length === 0){
@@ -57,6 +53,7 @@ export class FavoritesPage implements OnInit {
         await this.storage.openStore();
         const favorites = await (await this.storage.getItem('favorites')).toString();
         let itens: Item[] = [];
+        this.notices = [];
 
         if(favorites){
          itens =  JSON.parse(favorites) as Item[];
@@ -67,6 +64,7 @@ export class FavoritesPage implements OnInit {
             this.notices?.push((i));
           }
         });
+
         this.notFoundMsg = this.notices.length === 0 && !this.loadCenter ? true : false;
         this.allLoadMsg = this.notices.length > 0 && !this.loadCenter ? true : false;
       }, 100);
@@ -96,7 +94,6 @@ export class FavoritesPage implements OnInit {
   async removeNotices(item: Item){
     const index = this.notices.findIndex((obj => obj.id === item.id));
     this.notices[index].save = item.save = false;
-
     await this.storage.openStore();
     const favorites = await (await this.storage.getItem('favorites')).toString();
     let itens: Item[] = [];
