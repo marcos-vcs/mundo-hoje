@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { ToastService } from '../components/tools/toast.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -24,14 +25,16 @@ export class HomePage implements OnInit {
   //#endregion
 
   constructor(private noticeService: IbgeNoticeApiService,
+              private storage: StorageService,
               private toast: ToastService) {
     this.notice.items = [];
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadCenter = true;
     this.getNotices();
     this.loadCenter = false;
+    this.storage.init();
   }
 
   getSearchbarValue(){
@@ -50,7 +53,7 @@ export class HomePage implements OnInit {
     if(this.searchValue.length > 0){
       setTimeout(()=>{
         this.noticeService.find(this.page, this.limit, this.searchValue).subscribe(
-          (response) => {
+          async (response) => {
             this.notFoundMsg = false;
 
             response.items.forEach(i => {
@@ -70,6 +73,22 @@ export class HomePage implements OnInit {
 
             this.notFoundMsg = this.notice.count > 0 ? false : true;
             this.allLoadMsg = this.notice.totalPages === this.notice.page && !this.notFoundMsg ? true : false;
+
+            await this.storage.openStore();
+            const favorites = await (await this.storage.getItem('favorites')).toString();
+            let itens: Item[] = [];
+            if(favorites){
+             itens =  JSON.parse(favorites) as Item[];
+            }
+
+            console.log(itens);
+
+            itens.forEach(item => {
+              const index = this.notice.items.findIndex((obj => obj.id === item.id));
+              if(index !== -1){
+                this.notice.items[index].save = item.save;
+              }
+            });
 
           },
           (error) => {
@@ -98,7 +117,7 @@ export class HomePage implements OnInit {
     if(this.searchValue.length === 0){
       setTimeout(()=>{
         this.noticeService.get(this.page, this.limit).subscribe(
-          (response) => {
+          async (response) => {
             this.notFoundMsg = false;
             this.allLoadMsg  = false;
 
@@ -120,6 +139,20 @@ export class HomePage implements OnInit {
 
             this.notFoundMsg = this.notice.count > 0 ? false : true;
             this.allLoadMsg = this.notice.totalPages === this.notice.page && !this.notFoundMsg ? true : false;
+
+            await this.storage.openStore();
+            const favorites = await (await this.storage.getItem('favorites')).toString();
+            let itens: Item[] = [];
+            if(favorites){
+             itens =  JSON.parse(favorites) as Item[];
+            }
+
+            itens.forEach(item => {
+              const index = this.notice.items.findIndex((obj => obj.id === item.id));
+              if(index !== -1){
+                this.notice.items[index].save = item.save;
+              }
+            });
 
           },
           (error) => {
@@ -156,9 +189,27 @@ export class HomePage implements OnInit {
     }, 100);
   }
 
-  favorite(item: Item){
+  async favorite(item: Item){
     const index = this.notice.items.findIndex((obj => obj.id === item.id));
     this.notice.items[index].save = item.save ? false : true;
+
+    await this.storage.openStore();
+    const favorites = await (await this.storage.getItem('favorites')).toString();
+    let itens: Item[] = [];
+
+    if(favorites){
+     itens =  JSON.parse(favorites) as Item[];
+    }
+
+    if(item.save){
+      itens.push(item);
+    }else{
+      itens = itens.filter(data => data.id !== item.id);
+    }
+
+    this.storage.openStore();
+    this.storage.setItem('favorites',JSON.stringify(itens));
+
     if(this.notice.items[index].save){
       this.toast.presentToast('Notícia adicionada aos itens favoritados.', 'top', 'success');
     }else{
