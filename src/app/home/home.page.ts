@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { Item, Notice } from './../models/notice';
+import { Item, News } from '../models/news';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import { IonInfiniteScroll } from '@ionic/angular';
@@ -15,7 +15,7 @@ export class HomePage implements OnInit {
 
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-  notice: Notice = new Notice();
+  news: News = new News();
   searchValue = '';
   allLoadMsg = false;
   notFoundMsg = false;
@@ -27,7 +27,7 @@ export class HomePage implements OnInit {
   constructor(private noticeService: IbgeNoticeApiService,
               private storage: StorageService,
               private toast: ToastService) {
-    this.notice.items = [];
+    this.news.items = [];
   }
 
   async ngOnInit() {
@@ -38,18 +38,18 @@ export class HomePage implements OnInit {
   }
 
   async ionViewWillEnter(){
-    this.notice.items = [];
+    this.news.items = [];
     this.ngOnInit();
   }
 
   async ionPageWillLeave(){
-    this.notice.items = [];
+    this.news.items = [];
     this.ngOnInit();
   }
 
   getSearchbarValue(){
     this.page = 1;
-    this.notice.items = [];
+    this.news.items = [];
     this.notFoundMsg = false;
     this.allLoadMsg = false;
     this.loadCenter = true;
@@ -135,20 +135,20 @@ export class HomePage implements OnInit {
               if(i !== undefined){
                 i.photos = this.noticeService.getPhotos(i.link, i.imagens);
                 i.save = false;
-                this.notice.items?.push((i));
+                this.news.items?.push((i));
               }
             });
 
-            this.notice.count = response.count;
-            this.notice.nextPage = response.nextPage;
-            this.notice.page = response.page;
-            this.notice.previousPage = response.previousPage;
-            this.notice.showingFrom = response.showingFrom;
-            this.notice.showingTo = response.showingTo;
-            this.notice.totalPages = response.totalPages;
+            this.news.count = response.count;
+            this.news.nextPage = response.nextPage;
+            this.news.page = response.page;
+            this.news.previousPage = response.previousPage;
+            this.news.showingFrom = response.showingFrom;
+            this.news.showingTo = response.showingTo;
+            this.news.totalPages = response.totalPages;
 
-            this.notFoundMsg = this.notice.count > 0 ? false : true;
-            this.allLoadMsg = this.notice.totalPages === this.notice.page && !this.notFoundMsg ? true : false;
+            this.notFoundMsg = this.news.count > 0 ? false : true;
+            this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
 
             await this.storage.openStore();
             const favorites = await (await this.storage.getItem('favorites')).toString();
@@ -158,9 +158,9 @@ export class HomePage implements OnInit {
             }
 
             itens.forEach(item => {
-              const index = this.notice.items.findIndex((obj => obj.id === item.id));
+              const index = this.news.items.findIndex((obj => obj.id === item.id));
               if(index !== -1){
-                this.notice.items[index].save = item.save;
+                this.news.items[index].save = item.save;
               }
             });
 
@@ -182,7 +182,7 @@ export class HomePage implements OnInit {
 
   loadData(event) {
     setTimeout(() => {
-      if(this.page < this.notice.totalPages){
+      if(this.page < this.news.totalPages){
         this.page++;
         this.searchValue.length > 0 ? this.findNotices() : this.getNotices();
       }
@@ -193,15 +193,15 @@ export class HomePage implements OnInit {
   doRefresh(event) {
     setTimeout(() => {
       this.page = 1;
-      this.notice.items = [];
+      this.news.items = [];
       this.getNotices();
       event.target.complete();
     }, 100);
   }
 
   async favorite(item: Item){
-    const index = this.notice.items.findIndex((obj => obj.id === item.id));
-    this.notice.items[index].save = item.save ? false : true;
+    const index = this.news.items.findIndex((obj => obj.id === item.id));
+    this.news.items[index].save = item.save ? false : true;
 
     await this.storage.openStore();
     const favorites = await (await this.storage.getItem('favorites')).toString();
@@ -220,7 +220,7 @@ export class HomePage implements OnInit {
     this.storage.openStore();
     this.storage.setItem('favorites',JSON.stringify(itens));
 
-    if(this.notice.items[index].save){
+    if(this.news.items[index].save){
       this.toast.presentToast('Notícia adicionada aos itens favoritados.', 'top', 'success');
     }else{
       this.toast.presentToast('Notícia removida dos itens favoritados.', 'top', 'danger');

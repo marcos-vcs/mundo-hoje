@@ -15,13 +15,13 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="notFoundMsg" *ngIf="notFoundMsg || !notice.items && (notice.count === 0 && !loadCenter)">
+  <div class="notFoundMsg" *ngIf="notFoundMsg || !news.items && (news.count === 0 && !loadCenter)">
     Nenhuma notícia encontrada <br>
     <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
   </div>
 
   <span *ngIf="!loadCenter">
-    <ion-card *ngFor="let item of notice.items">
+    <ion-card *ngFor="let item of news.items">
     <ion-item>
       <img [src]="item.photos.image_intro" width="100%">
     </ion-item>

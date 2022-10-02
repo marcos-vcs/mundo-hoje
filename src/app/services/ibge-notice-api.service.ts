@@ -2,7 +2,7 @@ import { environment } from './../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Notice, Photos } from '../models/notice';
+import { News, Photos } from '../models/news';
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +19,16 @@ export class IbgeNoticeApiService {
     return photos;
   }
 
-  get(page: number, limit: number): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}`);
+  get(page: number, limit: number): Observable<News>{
+    return this.http.get<News>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}`);
   }
 
-  find(page: number, limit: number, findBy: string): Observable<Notice>{
-    return this.http.get<Notice>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}&busca=${findBy}`);
+  find(page: number, limit: number, findBy: string): Observable<News>{
+    return this.http.get<News>(`${environment.ibgeApi}/?qtd=${limit}&page=${page}&busca=${findBy}`);
   }
 
   getByDate(initial: Date, final: Date){
-    return this.http.get<Notice>(`${environment.ibgeApi}/?de=${this.getFormattedDate(initial)}&
+    return this.http.get<News>(`${environment.ibgeApi}/?de=${this.getFormattedDate(initial)}&
     ate=${this.getFormattedDate(final)}`);
   }
 

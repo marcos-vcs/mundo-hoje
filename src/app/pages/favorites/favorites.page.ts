@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastService } from 'src/app/components/tools/toast.service';
-import { Item, Notice } from 'src/app/models/notice';
+import { Item } from 'src/app/models/news';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
