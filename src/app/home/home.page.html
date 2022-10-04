@@ -21,7 +21,7 @@
   </div>
 
   <span *ngIf="!loadCenter">
-    <ion-card *ngFor="let item of news.items">
+    <ion-card *ngFor="let item of news.items" (click)="openDetails(item)">
     <ion-item>
       <img [src]="item.photos.image_intro" width="100%">
     </ion-item>

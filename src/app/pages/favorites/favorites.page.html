@@ -21,7 +21,7 @@
   </ion-refresher>
 
   <span *ngIf="!loadCenter">
-    <ion-card *ngFor="let item of notices">
+    <ion-card *ngFor="let item of news">
     <ion-item>
       <img [src]="item.photos.image_intro" width="100%">
     </ion-item>
@@ -29,7 +29,7 @@
     <ion-card-subtitle>
       <div class="options-list">
 
-        <ion-button (click)="removeNotices(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+        <ion-button (click)="removeNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
           <span *ngIf="item.save">
             <ion-icon class="btn-red" name="heart"></ion-icon>
           </span>

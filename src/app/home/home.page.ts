@@ -2,9 +2,10 @@
 import { Item, News } from '../models/news';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
-import { IonInfiniteScroll } from '@ionic/angular';
+import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 import { ToastService } from '../components/tools/toast.service';
 import { StorageService } from '../services/storage.service';
+import { NewsDetailComponent } from '../components/news-detail/news-detail.component';
 
 @Component({
   selector: 'app-home',
@@ -24,15 +25,16 @@ export class HomePage implements OnInit {
   private page = 1;
   //#endregion
 
-  constructor(private noticeService: IbgeNoticeApiService,
+  constructor(private newsService: IbgeNoticeApiService,
               private storage: StorageService,
+              private modalCtrl: ModalController,
               private toast: ToastService) {
     this.news.items = [];
   }
 
   async ngOnInit() {
     this.loadCenter = true;
-    this.getNotices();
+    this.getNews();
     this.loadCenter = false;
     this.storage.init();
   }
@@ -54,35 +56,35 @@ export class HomePage implements OnInit {
     this.allLoadMsg = false;
     this.loadCenter = true;
     setTimeout(()=>{
-      this.findNotices();
+      this.findNews();
       this.loadCenter = false;
     },500);
   }
 
-  findNotices(){
+  findNews(){
     if(this.searchValue.length > 0){
       setTimeout(()=>{
-        this.noticeService.find(this.page, this.limit, this.searchValue).subscribe(
+        this.newsService.find(this.page, this.limit, this.searchValue).subscribe(
           async (response) => {
             this.notFoundMsg = false;
 
             response.items.forEach(i => {
               if(i !== undefined){
-                i.photos = this.noticeService.getPhotos(i.link, i.imagens);
-                this.notice.items?.push((i));
+                i.photos = this.newsService.getPhotos(i.link, i.imagens);
+                this.news.items?.push((i));
               }
             });
 
-            this.notice.count = response.count;
-            this.notice.nextPage = response.nextPage;
-            this.notice.page = response.page;
-            this.notice.previousPage = response.previousPage;
-            this.notice.showingFrom = response.showingFrom;
-            this.notice.showingTo = response.showingTo;
-            this.notice.totalPages = response.totalPages;
+            this.news.count = response.count;
+            this.news.nextPage = response.nextPage;
+            this.news.page = response.page;
+            this.news.previousPage = response.previousPage;
+            this.news.showingFrom = response.showingFrom;
+            this.news.showingTo = response.showingTo;
+            this.news.totalPages = response.totalPages;
 
-            this.notFoundMsg = this.notice.count > 0 ? false : true;
-            this.allLoadMsg = this.notice.totalPages === this.notice.page && !this.notFoundMsg ? true : false;
+            this.notFoundMsg = this.news.count > 0 ? false : true;
+            this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
 
             await this.storage.openStore();
             const favorites = await (await this.storage.getItem('favorites')).toString();
@@ -94,9 +96,9 @@ export class HomePage implements OnInit {
             console.log(itens);
 
             itens.forEach(item => {
-              const index = this.notice.items.findIndex((obj => obj.id === item.id));
+              const index = this.news.items.findIndex((obj => obj.id === item.id));
               if(index !== -1){
-                this.notice.items[index].save = item.save;
+                this.news.items[index].save = item.save;
               }
             });
 
@@ -114,26 +116,26 @@ export class HomePage implements OnInit {
       },100);
     }else{
       this.page = 1;
-      this.notice.items = [];
+      this.news.items = [];
       this.loadCenter = true;
       setTimeout(()=>{
-        this.getNotices();
+        this.getNews();
         this.loadCenter = false;
       },100);
     }
   }
 
-  getNotices(){
+  getNews(){
     if(this.searchValue.length === 0){
       setTimeout(()=>{
-        this.noticeService.get(this.page, this.limit).subscribe(
+        this.newsService.get(this.page, this.limit).subscribe(
           async (response) => {
             this.notFoundMsg = false;
             this.allLoadMsg  = false;
 
             response.items.forEach(i => {
               if(i !== undefined){
-                i.photos = this.noticeService.getPhotos(i.link, i.imagens);
+                i.photos = this.newsService.getPhotos(i.link, i.imagens);
                 i.save = false;
                 this.news.items?.push((i));
               }
@@ -184,7 +186,7 @@ export class HomePage implements OnInit {
     setTimeout(() => {
       if(this.page < this.news.totalPages){
         this.page++;
-        this.searchValue.length > 0 ? this.findNotices() : this.getNotices();
+        this.searchValue.length > 0 ? this.findNews() : this.getNews();
       }
       event.target.complete();
     }, 100);
@@ -194,9 +196,18 @@ export class HomePage implements OnInit {
     setTimeout(() => {
       this.page = 1;
       this.news.items = [];
-      this.getNotices();
+      this.getNews();
       event.target.complete();
     }, 100);
+  }
+
+  async openDetails(item: Item){
+    const modal = await this.modalCtrl.create({
+      component: NewsDetailComponent,
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
   }
 
   async favorite(item: Item){
