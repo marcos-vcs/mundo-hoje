@@ -7,6 +7,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <div id="title">{{data.titulo}}</div>
+  <div id="subtitle">{{data.introducao}}</div>
+  <div><img [src]="data.photos.image_fulltext"></div>
+  <div id="publicacao-date">
+    Publicado em: {{data.data_publicacao.toString().split(' ')[0]}}
+  </div>
+  <iframe data-tap-disabled="true" [src]="sanitizer.bypassSecurityTrustResourceUrl(data.link)" style="width:100%; height:100%;"></iframe>
 
 </ion-content>

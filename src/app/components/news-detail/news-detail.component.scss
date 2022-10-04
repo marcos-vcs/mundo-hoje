@@ -1,7 +1,22 @@
 *{
   font-family: 'Open Sans', sans-serif;
 }
-
+#title{
+  font-weight: bold;
+  color: #797979;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+#subtitle{
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+#publicacao-date{
+  font-weight: bold;
+  color: #797979;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
 .btn-cancel{
   font-size: 12px;
   text-transform: capitalize;

@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Sanitizer } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
+import { Item } from 'src/app/models/news';
 
 @Component({
   selector: 'app-news-detail',
@@ -8,14 +10,18 @@ import { ModalController } from '@ionic/angular';
 })
 export class NewsDetailComponent{
 
-  constructor(private modalCtrl: ModalController) {}
+  data: Item;
+
+  constructor(private modalCtrl: ModalController,
+              private sanitiser: Sanitizer,
+              public sanitizer: DomSanitizer) {}
 
   cancel() {
-    return this.modalCtrl.dismiss(null, 'cancel');
+    return this.modalCtrl.dismiss('cancel');
   }
 
   confirm() {
-    return this.modalCtrl.dismiss(null, 'confirm');
+    return this.modalCtrl.dismiss('confirm');
   }
 
 }
