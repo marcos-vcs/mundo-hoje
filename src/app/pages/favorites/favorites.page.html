@@ -22,8 +22,8 @@
 
   <span *ngIf="!loadCenter">
     <ion-card *ngFor="let item of news">
-    <ion-item>
-      <img [src]="item.photos.image_intro" width="100%">
+    <ion-item (click)="openDetails(item)">
+      <img [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../../assets/no-found.png'" width="100%">
     </ion-item>
 
     <ion-card-subtitle>
@@ -45,7 +45,7 @@
 
       <br>Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
     </ion-card-subtitle>
-    <ion-card-title>
+    <ion-card-title (click)="openDetails(item)">
       {{item.introducao}}
     </ion-card-title>
     </ion-card>

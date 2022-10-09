@@ -202,14 +202,12 @@ export class HomePage implements OnInit {
   }
 
   async openDetails(item: Item){
-    console.log(item);
     const modal = await this.modalCtrl.create({
       component: NewsDetailComponent,
       componentProps: {data: item}
     });
     modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
+    await modal.onWillDismiss();
   }
 
   async favorite(item: Item){

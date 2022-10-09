@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { NewsDetailComponent } from 'src/app/components/news-detail/news-detail.component';
 import { ToastService } from 'src/app/components/tools/toast.service';
 import { Item } from 'src/app/models/news';
 import { StorageService } from 'src/app/services/storage.service';
@@ -19,6 +21,7 @@ export class FavoritesPage implements OnInit {
   //#endregion
 
   constructor(private storage: StorageService,
+              private modalCtrl: ModalController,
               private toast: ToastService) { }
 
   ngOnInit() {
@@ -127,6 +130,15 @@ export class FavoritesPage implements OnInit {
       this.getNotices();
       event.target.complete();
     }, 100);
+  }
+
+  async openDetails(item: Item){
+    const modal = await this.modalCtrl.create({
+      component: NewsDetailComponent,
+      componentProps: {data: item}
+    });
+    modal.present();
+    await modal.onWillDismiss();
   }
 
 }
