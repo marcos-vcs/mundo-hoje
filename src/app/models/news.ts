@@ -24,9 +24,16 @@ export class Item{
   destaque: boolean;
   link: string;
   photos: Photos;
+  article: Article;
   save = false;
 }
 export class Photos{
   image_fulltext: string;
   image_intro: string;
+}
+export class Article{
+  title: string;
+  subtitle: string;
+  metadata: string;
+  text: string;
 }

@@ -2,7 +2,7 @@ import { environment } from './../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { News, Photos } from '../models/news';
+import { Item, News, Photos } from '../models/news';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,10 @@ export class IbgeNoticeApiService {
   getByDate(initial: Date, final: Date){
     return this.http.get<News>(`${environment.ibgeApi}/?de=${this.getFormattedDate(initial)}&
     ate=${this.getFormattedDate(final)}`);
+  }
+
+  getArticle(item: Item): Observable<Item>{
+    return this.http.post<Item>(`${environment.articleScrapingApi}`, item);
   }
 
   private getFormattedDate(date: Date){
