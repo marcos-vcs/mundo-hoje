@@ -11,6 +11,7 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
+
   //#region variaveis
   news: Item[] = [];
   searchValue = '';

@@ -2,7 +2,7 @@
 import { Item, News } from '../models/news';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
-import { IonInfiniteScroll, ModalController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { ToastService } from '../components/tools/toast.service';
 import { StorageService } from '../services/storage.service';
 import { NewsDetailComponent } from '../components/news-detail/news-detail.component';
@@ -27,6 +27,7 @@ export class HomePage implements OnInit {
 
   constructor(private newsService: IbgeNoticeApiService,
               private storage: StorageService,
+              private loadingCtrl: LoadingController,
               private modalCtrl: ModalController,
               private toast: ToastService) {
     this.news.items = [];
@@ -202,40 +203,74 @@ export class HomePage implements OnInit {
   }
 
   async openDetails(item: Item){
-    const modal = await this.modalCtrl.create({
-      component: NewsDetailComponent,
-      componentProps: {data: item}
+    const loading = await this.loadingCtrl.create({
+      message: 'Carregando os detalhes da notícia 📜 Aguarde...',
+      duration: 10000,
     });
-    modal.present();
-    await modal.onWillDismiss();
+
+    loading.present();
+
+    this.newsService.getArticle(item).subscribe({
+      next: async (v) => {
+        item = v;
+
+        const modal = await this.modalCtrl.create({
+          component: NewsDetailComponent,
+          componentProps: {data: item}
+        });
+        modal.present();
+        await modal.onWillDismiss();
+      },
+      error: (e) => {
+        this.toast.presentToast('Erro ao carregar detalhes da noticia :(', 'top', 'danger');
+        console.log(e);
+      },
+      complete: () => {
+        loading.dismiss();
+      }
+    });
   }
 
   async favorite(item: Item){
-    const index = this.news.items.findIndex((obj => obj.id === item.id));
-    this.news.items[index].save = item.save ? false : true;
 
-    await this.storage.openStore();
-    const favorites = await (await this.storage.getItem('favorites')).toString();
-    let itens: Item[] = [];
+    this.newsService.getArticle(item).subscribe({
+      next: async (v) => {
 
-    if(favorites){
-     itens =  JSON.parse(favorites) as Item[];
-    }
+        item = v;
 
-    if(item.save){
-      itens.push(item);
-    }else{
-      itens = itens.filter(data => data.id !== item.id);
-    }
+        const index = this.news.items.findIndex((obj => obj.id === item.id));
+        this.news.items[index].save = item.save ? false : true;
 
-    this.storage.openStore();
-    this.storage.setItem('favorites',JSON.stringify(itens));
+        await this.storage.openStore();
+        const favorites = await (await this.storage.getItem('favorites')).toString();
+        let itens: Item[] = [];
 
-    if(this.news.items[index].save){
-      this.toast.presentToast('Notícia adicionada aos itens favoritados.', 'top', 'success');
-    }else{
-      this.toast.presentToast('Notícia removida dos itens favoritados.', 'top', 'danger');
-    }
+        if(favorites){
+         itens =  JSON.parse(favorites) as Item[];
+        }
+
+        if(item.save){
+          itens.push(item);
+        }else{
+          itens = itens.filter(data => data.id !== item.id);
+        }
+
+        this.storage.openStore();
+        this.storage.setItem('favorites',JSON.stringify(itens));
+
+        if(this.news.items[index].save){
+          this.toast.presentToast('Notícia adicionada aos itens favoritados.', 'top', 'success');
+        }else{
+          this.toast.presentToast('Notícia removida dos itens favoritados.', 'top', 'danger');
+        }
+
+      },
+      error: (e) => {
+        this.toast.presentToast('Não foi possível favoritar a notícia :(', 'top', 'danger');
+        console.log(e);
+      }
+    });
+
   }
 
 }
