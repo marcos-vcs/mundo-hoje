@@ -12,8 +12,6 @@ export class AppComponent {
   constructor(private animationCtrl: AnimationController) {}
 
   customTransition = (baseEl: any, opts?: any) => {
-    console.log('opts.enteringEl:' + opts.enteringEl);
-    console.log('opts.leavingEl:' + opts.leavingEl);
     const anim1 = this.animationCtrl
       .create()
       .addElement(opts.leavingEl)

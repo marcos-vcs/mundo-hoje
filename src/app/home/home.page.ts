@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Item, News } from '../models/news';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import {
   IonInfiniteScroll,
@@ -11,15 +11,19 @@ import { ToastService } from '../components/tools/toast.service';
 import { StorageService } from '../services/storage.service';
 import { NewsDetailComponent } from '../components/news-detail/news-detail.component';
 import { Configuration } from '../models/configuration';
+import { EconomyApiService } from '../services/economy-api.service';
+import { CoinsMetadata } from '../models/coins';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  coins: CoinsMetadata[] = [];
   news: News = new News();
   searchValue = '';
   allLoadMsg = false;
@@ -30,6 +34,7 @@ export class HomePage implements OnInit {
   //#endregion
 
   constructor(
+    private economyService: EconomyApiService,
     private newsService: IbgeNoticeApiService,
     private storage: StorageService,
     private loadingCtrl: LoadingController,
@@ -45,6 +50,8 @@ export class HomePage implements OnInit {
     this.loadCenter = false;
     this.storage.init();
     this.loadConfiguration();
+    this.getCoins();
+    setInterval(() => this.getCoins(),30000);
   }
 
   async ionViewWillEnter() {
@@ -65,7 +72,6 @@ export class HomePage implements OnInit {
 
     if (configuration) {
       const loadedConfigurations = JSON.parse(configuration) as Configuration;
-      console.log(loadedConfigurations);
 
       if (loadedConfigurations.isDarkMode) {
         document.body.setAttribute('color-theme', 'dark');
@@ -86,6 +92,19 @@ export class HomePage implements OnInit {
       this.findNews();
       this.loadCenter = false;
     }, 500);
+  }
+
+  getCoins(){
+    this.economyService.getCoins().subscribe({
+      next: (v) => {
+        this.coins = this.economyService.getMetadata(v);
+      },
+      error: (e) => {
+        console.log(e);
+      },
+      complete: () => {
+      }
+    });
   }
 
   findNews() {
@@ -126,8 +145,6 @@ export class HomePage implements OnInit {
               if (favorites) {
                 itens = JSON.parse(favorites) as Item[];
               }
-
-              console.log(itens);
 
               itens.forEach((item) => {
                 const index = this.news.items.findIndex(
@@ -246,6 +263,7 @@ export class HomePage implements OnInit {
       this.page = 1;
       this.news.items = [];
       this.getNews();
+      this.getCoins();
       event.target.complete();
     }, 100);
   }
@@ -335,3 +353,4 @@ export class HomePage implements OnInit {
     });
   }
 }
+

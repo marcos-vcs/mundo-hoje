@@ -24,6 +24,8 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+@import '~swiper/scss';
+@import '~@ionic/angular/css/ionic-swiper';
 
 .searchbar-input.sc-ion-searchbar-md {
     border-radius: 25px;
@@ -42,6 +44,27 @@
   .mt-15{
     margin-top: 15px;
   }
+  .mb-5{
+    margin-bottom: 5px;
+  }
+  .p-0{
+    padding: 0;
+  }
   .br-15{
     border-radius: 15px;
+  }
+  .float-left{
+    float: left;
+  }
+  .fw-bold{
+    font-weight: bold;
+  }
+  .float-right{
+    float: right;
+  }
+  .widht-60-percent{
+    width: 60%;
+  }
+  .height-250-px{
+    height: 250px;
   }

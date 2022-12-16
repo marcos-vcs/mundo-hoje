@@ -41,15 +41,10 @@ export class SettingsPage implements OnInit {
 
     if (configuration.length > 3) {
       this.configuration = JSON.parse(configuration) as Configuration;
-      console.log('atual configuration: ');
-      console.log(configuration);
     } else {
       this.configuration.isDarkMode = true;
       this.storage.openStore();
       this.storage.setItem('configurations', JSON.stringify(this.configuration));
-
-      console.log('not found configuration:');
-      console.log(JSON.stringify(this.configuration));
     }
 
     loading.dismiss();
@@ -69,7 +64,6 @@ export class SettingsPage implements OnInit {
   }
 
   onToggleColorTheme() {
-    console.log(this.configuration);
     if (this.configuration.isDarkMode) {
       document.body.setAttribute('color-theme', 'dark');
     } else {
