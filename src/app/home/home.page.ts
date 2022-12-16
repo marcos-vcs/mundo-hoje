@@ -101,8 +101,6 @@ export class HomePage implements OnInit {
       },
       error: (e) => {
         console.log(e);
-      },
-      complete: () => {
       }
     });
   }
@@ -183,68 +181,51 @@ export class HomePage implements OnInit {
 
   getNews() {
     if (this.searchValue.length === 0) {
-      setTimeout(() => {
-        this.newsService.get(this.page, this.limit).subscribe(
-          async (response) => {
-            this.notFoundMsg = false;
-            this.allLoadMsg = false;
 
-            response.items.forEach((i) => {
-              if (i !== undefined) {
-                i.photos = this.newsService.getPhotos(i.link, i.imagens);
-                i.save = false;
-                this.news.items?.push(i);
-              }
-            });
+      this.newsService.get(this.page, this.limit).subscribe({
+        next: async (v) => {
+          this.notFoundMsg = false;
+          this.allLoadMsg = false;
 
-            this.news.count = response.count;
-            this.news.nextPage = response.nextPage;
-            this.news.page = response.page;
-            this.news.previousPage = response.previousPage;
-            this.news.showingFrom = response.showingFrom;
-            this.news.showingTo = response.showingTo;
-            this.news.totalPages = response.totalPages;
-
-            this.notFoundMsg = this.news.count > 0 ? false : true;
-            this.allLoadMsg =
-              this.news.totalPages === this.news.page && !this.notFoundMsg
-                ? true
-                : false;
-
-            await this.storage.openStore();
-            const favorites = await (
-              await this.storage.getItem('favorites')
-            ).toString();
-            let itens: Item[] = [];
-            if (favorites) {
-              itens = JSON.parse(favorites) as Item[];
+          v.items.forEach(async (i) => {
+            if (i !== undefined) {
+              i.photos = this.newsService.getPhotos(i.link, i.imagens);
+              i.save = await this.isFavorited(i);
+              this.news.items?.push(i);
             }
+          });
 
-            itens.forEach((item) => {
-              const index = this.news.items.findIndex(
-                (obj) => obj.id === item.id
-              );
-              if (index !== -1) {
-                this.news.items[index].save = item.save;
-              }
-            });
-          },
-          (error) => {
-            if (error.status === 0) {
-              this.page--;
-              this.allLoadMsg = true;
-              this.toast.presentToast(
-                'Você está sem internet :(',
-                'top',
-                'danger'
-              );
-            }
+          this.news = v;
 
-            this.notFoundMsg = true;
-            this.loadCenter = false;
+          this.notFoundMsg = this.news.count > 0 ? false : true;
+          this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
+
+          await this.storage.openStore();
+          const favorites = await (await this.storage.getItem('favorites')).toString();
+          const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+
+          itens.forEach((item) => {
+            const index = this.news.items.findIndex((obj) => obj.id === item.id);
+            this.news.items[index].save = index !== -1 ? true : false;
+          });
+
+        },
+        error: (e) => {
+          if (e.status === 0) {
+            this.page--;
+            this.allLoadMsg = true;
+            this.toast.presentToast('Você está sem internet :(','top','danger');
+            return;
           }
-        );
-      }, 100);
+
+          this.notFoundMsg = true;
+          this.loadCenter = false;
+        },
+        complete: () => {
+          this.loadCenter = false;
+        }
+      });
+
     }
   }
 
@@ -302,26 +283,29 @@ export class HomePage implements OnInit {
   }
 
   async favorite(item: Item) {
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Adicionando a lista de favoritos 📜 Aguarde...',
+      duration: 10000,
+    });
+
+    loading.present();
+
     this.newsService.getArticle(item).subscribe({
       next: async (v) => {
         item = v;
-
         const index = this.news.items.findIndex((obj) => obj.id === item.id);
-        this.news.items[index].save = item.save ? false : true;
+        this.news.items[index].save = !item.save;
 
         await this.storage.openStore();
-        const favorites = await (
-          await this.storage.getItem('favorites')
-        ).toString();
-        let itens: Item[] = [];
+        const favorites = await (await this.storage.getItem('favorites')).toString();
+        let itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
 
-        if (favorites) {
-          itens = JSON.parse(favorites) as Item[];
-        }
-
-        if (item.save) {
+        if (!itens.find((i) => i.id === item.id)) {
+          item.save = true;
           itens.push(item);
         } else {
+          this.news.items[index].save = false;
           itens = itens.filter((data) => data.id !== item.id);
         }
 
@@ -329,28 +313,31 @@ export class HomePage implements OnInit {
         this.storage.setItem('favorites', JSON.stringify(itens));
 
         if (this.news.items[index].save) {
-          this.toast.presentToast(
-            'Notícia adicionada aos itens favoritados.',
-            'top',
-            'success'
-          );
+          this.toast.presentToast('Notícia adicionada aos itens favoritados.','top','success');
         } else {
-          this.toast.presentToast(
-            'Notícia removida dos itens favoritados.',
-            'top',
-            'danger'
-          );
+          this.toast.presentToast('Notícia removida dos itens favoritados.','top','danger');
         }
       },
       error: (e) => {
-        this.toast.presentToast(
-          'Não foi possível favoritar a notícia :(',
-          'top',
-          'danger'
-        );
+        this.toast.presentToast('Não foi possível favoritar a notícia :(','top','danger');
         console.log(e);
       },
+      complete: () => {
+        loading.dismiss();
+      }
     });
+
   }
+
+  private async isFavorited(item: Item): Promise<boolean>{
+    await this.storage.openStore();
+    const favorites = await (await this.storage.getItem('favorites')).toString();
+
+    let itens: Item[] = [];
+    itens = favorites ? JSON.parse(favorites) as Item[] : [];
+    return itens.find((i) => i.id === item.id) ? true : false;
+
+  }
+
 }
 

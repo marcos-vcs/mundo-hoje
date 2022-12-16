@@ -52,47 +52,25 @@ export class FavoritesPage implements OnInit {
   async getNotices(){
     this.notFoundMsg = false;
     this.allLoadMsg = false;
+
     if(this.searchValue.length === 0){
-      setTimeout(async ()=>{
-        await this.storage.openStore();
-        const favorites = await (await this.storage.getItem('favorites')).toString();
-        let itens: Item[] = [];
-        this.news = [];
-
-        if(favorites){
-         itens =  JSON.parse(favorites) as Item[];
-        }
-
-        itens.forEach(i => {
-          if(i !== undefined){
-            this.news?.push((i));
-          }
-        });
-
-        this.notFoundMsg = this.news.length === 0 && !this.loadCenter ? true : false;
-        this.allLoadMsg = this.news.length > 0 && !this.loadCenter ? true : false;
-      }, 100);
+      await this.storage.openStore();
+      const favorites = await (await this.storage.getItem('favorites')).toString();
+      const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+      this.news = itens;
+      console.log(itens);
     }else{
-      setTimeout(async ()=>{
-        await this.storage.openStore();
-        const favorites = await (await this.storage.getItem('favorites')).toString();
-        let itens: Item[] = [];
-
-        if(favorites){
-         itens =  JSON.parse(favorites) as Item[];
-        }
-
-        itens.forEach(i => {
-          if(i !== undefined){
-            this.news?.push((i));
-          }
-        });
-        this.news = this.news.filter(f => f.introducao.toLowerCase()
-                                   .includes(this.searchValue.toLowerCase()));
-        this.notFoundMsg = this.news.length === 0 && !this.loadCenter ? true : false;
-        this.allLoadMsg = this.news.length > 0 && !this.loadCenter ? true : false;
-      }, 100);
+      await this.storage.openStore();
+      const favorites = await (await this.storage.getItem('favorites')).toString();
+      const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+      this.news = itens;
+      this.news = this.news.filter((f) => f.introducao.toLowerCase()
+                                 .includes(this.searchValue.toLowerCase()));
     }
+
+    this.notFoundMsg = this.news.length === 0 && !this.loadCenter ? true : false;
+    this.allLoadMsg = this.news.length > 0 && !this.loadCenter ? true : false;
+
   }
 
   async removeNews(item: Item){
@@ -100,11 +78,7 @@ export class FavoritesPage implements OnInit {
     this.news[index].save = item.save = false;
     await this.storage.openStore();
     const favorites = await (await this.storage.getItem('favorites')).toString();
-    let itens: Item[] = [];
-
-    if(favorites){
-     itens =  JSON.parse(favorites) as Item[];
-    }
+    let itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
 
     if(item.save){
       itens.push(item);
