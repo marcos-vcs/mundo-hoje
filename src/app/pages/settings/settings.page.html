@@ -18,7 +18,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row *ngIf="itens.length > 0" style="margin-top: -20px;">
+    <ion-row *ngIf="itens === undefined || itens.length > 0" style="margin-top: -20px;">
       <ion-col class="ion-padding" size="12">
         <ion-item lines="inset" class="br-15">
           <ion-label style="font-size: 14px;">

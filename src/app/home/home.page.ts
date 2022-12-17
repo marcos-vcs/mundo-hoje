@@ -45,6 +45,7 @@ export class HomePage implements OnInit {
   }
 
   async ngOnInit() {
+    this.page = 1;
     this.loadCenter = true;
     this.getNews();
     this.loadCenter = false;
