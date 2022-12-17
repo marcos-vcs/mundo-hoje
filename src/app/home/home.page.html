@@ -68,7 +68,7 @@
   <span *ngIf="!loadCenter">
     <ion-card *ngFor="let item of news.items">
     <ion-item (click)="openDetails(item)">
-      <ion-img class="mt-15" [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%"></ion-img>
+      <img class="mt-15" [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
     </ion-item>
 
     <ion-card-subtitle>

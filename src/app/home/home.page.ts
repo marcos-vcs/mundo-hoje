@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
     setInterval(() => this.getCoins(),30000);
   }
 
-  async ionViewWillEnter() {
+/*   async ionViewWillEnter() {
     this.news.items = [];
     this.ngOnInit();
   }
@@ -62,7 +62,7 @@ export class HomePage implements OnInit {
   async ionPageWillLeave() {
     this.news.items = [];
     this.ngOnInit();
-  }
+  } */
 
   async loadConfiguration() {
     await this.storage.openStore();
@@ -107,67 +107,35 @@ export class HomePage implements OnInit {
 
   findNews() {
     if (this.searchValue.length > 0) {
-      setTimeout(() => {
-        this.newsService
-          .find(this.page, this.limit, this.searchValue)
-          .subscribe(
-            async (response) => {
-              this.notFoundMsg = false;
+      this.newsService.find(this.page, this.limit, this.searchValue).subscribe({
+        next: async (v) => {
+          this.notFoundMsg = false;
 
-              response.items.forEach((i) => {
-                if (i !== undefined) {
-                  i.photos = this.newsService.getPhotos(i.link, i.imagens);
-                  this.news.items?.push(i);
-                }
-              });
-
-              this.news.count = response.count;
-              this.news.nextPage = response.nextPage;
-              this.news.page = response.page;
-              this.news.previousPage = response.previousPage;
-              this.news.showingFrom = response.showingFrom;
-              this.news.showingTo = response.showingTo;
-              this.news.totalPages = response.totalPages;
-
-              this.notFoundMsg = this.news.count > 0 ? false : true;
-              this.allLoadMsg =
-                this.news.totalPages === this.news.page && !this.notFoundMsg
-                  ? true
-                  : false;
-
-              await this.storage.openStore();
-              const favorites = await (
-                await this.storage.getItem('favorites')
-              ).toString();
-              let itens: Item[] = [];
-              if (favorites) {
-                itens = JSON.parse(favorites) as Item[];
-              }
-
-              itens.forEach((item) => {
-                const index = this.news.items.findIndex(
-                  (obj) => obj.id === item.id
-                );
-                if (index !== -1) {
-                  this.news.items[index].save = item.save;
-                }
-              });
-            },
-            (error) => {
-              if (error.status === 0) {
-                this.page--;
-                this.toast.presentToast(
-                  'Você está sem internet :(',
-                  'top',
-                  'danger'
-                );
-              }
-
-              this.notFoundMsg = true;
-              this.loadCenter = false;
+          v.items.forEach(async (i) => {
+            if (i) {
+              i.photos = this.newsService.getPhotos(i.link, i.imagens);
+              i.save = await this.isFavorited(i);
             }
-          );
-      }, 100);
+          });
+          v.items.forEach((i) => this.news.items.push(i));
+          const itensPreUpdate = this.news.items;
+          this.news = v;
+          this.news.items = itensPreUpdate;
+
+          this.notFoundMsg = this.news.count > 0 ? false : true;
+          this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
+
+        },
+        error: (e) => {
+          if (e.status === 0) {
+            this.page--;
+            this.toast.presentToast('Você está sem internet :(','top','danger');
+          }
+
+          this.notFoundMsg = true;
+          this.loadCenter = false;
+        }
+      });
     } else {
       this.page = 1;
       this.news.items = [];
@@ -188,26 +156,19 @@ export class HomePage implements OnInit {
           this.allLoadMsg = false;
 
           v.items.forEach(async (i) => {
-            if (i !== undefined) {
+            if (i) {
               i.photos = this.newsService.getPhotos(i.link, i.imagens);
               i.save = await this.isFavorited(i);
-              this.news.items?.push(i);
             }
           });
-
+          v.items.forEach((i) => this.news.items.push(i));
+          const itensPreUpdate = this.news.items;
           this.news = v;
+          this.news.items = itensPreUpdate;
 
-          this.notFoundMsg = this.news.count > 0 ? false : true;
+
+          this.notFoundMsg = this.news.items.length > 0 ? false : true;
           this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
-
-          await this.storage.openStore();
-          const favorites = await (await this.storage.getItem('favorites')).toString();
-          const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
-
-          itens.forEach((item) => {
-            const index = this.news.items.findIndex((obj) => obj.id === item.id);
-            this.news.items[index].save = index !== -1 ? true : false;
-          });
 
         },
         error: (e) => {
@@ -332,11 +293,8 @@ export class HomePage implements OnInit {
   private async isFavorited(item: Item): Promise<boolean>{
     await this.storage.openStore();
     const favorites = await (await this.storage.getItem('favorites')).toString();
-
-    let itens: Item[] = [];
-    itens = favorites ? JSON.parse(favorites) as Item[] : [];
+    const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
     return itens.find((i) => i.id === item.id) ? true : false;
-
   }
 
 }
