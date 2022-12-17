@@ -74,8 +74,8 @@
         {{item.titulo}}
       </ion-card-title>
       <ion-item (click)="openDetails(item)">
-        <img class="mt-15" [src]="item.photos.image_intro"
-          onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
+        <ion-img class="mt-15" [src]="item.photos.image_intro" (ionError)="item.photos.image_intro = errorImage"
+          width="100%" #img></ion-img>
       </ion-item>
 
       <ion-card-subtitle>

@@ -10,6 +10,7 @@ import { Item } from 'src/app/models/news';
 })
 export class NewsDetailComponent {
   data: Item;
+  errorImage = '../../../assets/no-found.png';
 
   constructor(
     private modalCtrl: ModalController,

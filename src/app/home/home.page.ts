@@ -23,6 +23,7 @@ import { CoinsMetadata } from '../models/coins';
 export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  errorImage = '../../../assets/no-found.png';
   coins: CoinsMetadata[] = [];
   news: News = new News();
   searchValue = '';

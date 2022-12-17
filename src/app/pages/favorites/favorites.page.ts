@@ -18,6 +18,7 @@ export class FavoritesPage implements OnInit {
   loadCenter = false;
   notFoundMsg = false;
   allLoadMsg = false;
+  errorImage = '../../../assets/no-found.png';
   //#endregion
 
   constructor(
