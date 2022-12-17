@@ -18,6 +18,19 @@
       </ion-col>
     </ion-row>
 
+    <ion-row *ngIf="itens.length > 0" style="margin-top: -20px;">
+      <ion-col class="ion-padding" size="12">
+        <ion-item lines="inset" class="br-15">
+          <ion-label style="font-size: 14px;">
+            Excluir todos os favoritos?
+          </ion-label>
+          <ion-button (click)="deleteAllFavorites()" shape="round" size="small" color="danger">
+            apagar
+          </ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
     <ion-row>
       <ion-col size="6">
         <ion-button style="float: right;" [routerLink]="['']">Voltar</ion-button>

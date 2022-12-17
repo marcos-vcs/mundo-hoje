@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
     setInterval(() => this.getCoins(),30000);
   }
 
-/*   async ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.news.items = [];
     this.ngOnInit();
   }
@@ -62,7 +62,7 @@ export class HomePage implements OnInit {
   async ionPageWillLeave() {
     this.news.items = [];
     this.ngOnInit();
-  } */
+  }
 
   async loadConfiguration() {
     await this.storage.openStore();

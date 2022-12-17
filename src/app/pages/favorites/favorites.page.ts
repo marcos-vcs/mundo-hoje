@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { NewsDetailComponent } from 'src/app/components/news-detail/news-detail.component';
 import { ToastService } from 'src/app/components/tools/toast.service';
 import { Item } from 'src/app/models/news';
@@ -22,6 +22,7 @@ export class FavoritesPage implements OnInit {
   //#endregion
 
   constructor(private storage: StorageService,
+              private alertController: AlertController,
               private modalCtrl: ModalController,
               private toast: ToastService) { }
 
@@ -74,28 +75,48 @@ export class FavoritesPage implements OnInit {
   }
 
   async removeNews(item: Item){
-    const index = this.news.findIndex((obj => obj.id === item.id));
-    this.news[index].save = item.save = false;
-    await this.storage.openStore();
-    const favorites = await (await this.storage.getItem('favorites')).toString();
-    let itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
 
-    if(item.save){
-      itens.push(item);
-    }else{
-      itens = itens.filter(data => data.id !== item.id);
+    const alert = await this.alertController.create({
+      subHeader: 'Tem certeza que deseja remover essa noticia dos favoritos?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Confirmar',
+          role: 'confirm'
+        },
+      ],
+    });
+    await alert.present();
+
+    const role = await alert.onDidDismiss();
+
+    if(role.role === 'confirm'){
+      const index = this.news.findIndex((obj => obj.id === item.id));
+      this.news[index].save = item.save = false;
+      await this.storage.openStore();
+      const favorites = await (await this.storage.getItem('favorites')).toString();
+      let itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+
+      if(item.save){
+        itens.push(item);
+      }else{
+        itens = itens.filter(data => data.id !== item.id);
+      }
+
+      this.storage.openStore();
+      this.storage.setItem('favorites',JSON.stringify(itens));
+      this.toast.presentToast('Notícia removida dos itens favoritados.', 'top', 'danger');
+
+      this.loadCenter = true;
+      setTimeout(()=>{
+        this.news = [];
+        this.getNotices();
+        this.loadCenter = false;
+      },300);
     }
-
-    this.storage.openStore();
-    this.storage.setItem('favorites',JSON.stringify(itens));
-    this.toast.presentToast('Notícia removida dos itens favoritados.', 'top', 'danger');
-
-    this.loadCenter = true;
-    setTimeout(()=>{
-      this.news = [];
-      this.getNotices();
-      this.loadCenter = false;
-    },300);
 
   }
 
