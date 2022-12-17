@@ -7,9 +7,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { IbgeNoticeApiService } from './services/ibge-notice-api.service';
 import { DatePipe } from '@angular/common';
+import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NewsDetailComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

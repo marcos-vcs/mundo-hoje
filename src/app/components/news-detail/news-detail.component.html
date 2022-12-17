@@ -16,8 +16,8 @@
     Publicado em: {{data.data_publicacao.toString().split(' ')[0]}}
   </div>
 
-  <div id="article">
-    <p>{{data.article.text}}</p>
+  <div id="article" *ngFor="let text of data.article.textIndented">
+    <p>{{text}}</p>
   </div>
 
 </ion-content>

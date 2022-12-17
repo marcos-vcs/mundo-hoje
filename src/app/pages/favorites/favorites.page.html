@@ -4,7 +4,8 @@
       Favoritos
     </ion-title>
 
-    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;"
+      placeholder="Buscar"></ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
@@ -21,31 +22,35 @@
   </ion-refresher>
 
   <span *ngIf="!loadCenter">
-    <ion-card *ngFor="let item of news">
-    <ion-item (click)="openDetails(item)">
-      <img class="mt-15" [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
-    </ion-item>
+    <ion-card class="mb-10" *ngFor="let item of news">
+      <ion-card-title (click)="openDetails(item)" class="title">
+        {{item.titulo}}
+      </ion-card-title>
+      <ion-item (click)="openDetails(item)">
+        <img class="mt-15" [src]="item.photos.image_intro"
+          onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
+      </ion-item>
 
-    <ion-card-subtitle>
-      <div>
-        Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
-      </div>
+      <ion-card-subtitle>
+        <div>
+          Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
+        </div>
 
-      <div class="options-list">
-        <ion-button (click)="removeNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
-          <span *ngIf="item.save">
-            <ion-icon class="btn-red" name="heart"></ion-icon>
-          </span>
-          <span *ngIf="!item.save">
-            <ion-icon class="btn-gray" name="heart"></ion-icon>
-          </span>
-        </ion-button>
-      </div>
+        <div class="options-list">
+          <ion-button (click)="removeNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+            <span *ngIf="item.save">
+              <ion-icon class="btn-red" name="heart"></ion-icon>
+            </span>
+            <span *ngIf="!item.save">
+              <ion-icon class="btn-gray" name="heart"></ion-icon>
+            </span>
+          </ion-button>
+        </div>
 
-    </ion-card-subtitle>
-    <ion-card-title class="ion-padding" (click)="openDetails(item)">
-      {{item.introducao}}
-    </ion-card-title>
+      </ion-card-subtitle>
+      <ion-card-title class="ion-padding" (click)="openDetails(item)">
+        {{item.introducao}}
+      </ion-card-title>
     </ion-card>
   </span>
 

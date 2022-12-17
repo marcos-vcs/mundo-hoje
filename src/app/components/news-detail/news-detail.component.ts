@@ -8,13 +8,14 @@ import { Item } from 'src/app/models/news';
   templateUrl: './news-detail.component.html',
   styleUrls: ['./news-detail.component.scss'],
 })
-export class NewsDetailComponent{
-
+export class NewsDetailComponent {
   data: Item;
 
-  constructor(private modalCtrl: ModalController,
-              private sanitiser: Sanitizer,
-              public sanitizer: DomSanitizer) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private sanitiser: Sanitizer,
+    public sanitizer: DomSanitizer
+  ) {}
 
   cancel() {
     return this.modalCtrl.dismiss('cancel');
@@ -23,5 +24,4 @@ export class NewsDetailComponent{
   confirm() {
     return this.modalCtrl.dismiss('confirm');
   }
-
 }

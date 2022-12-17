@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export class News{
+export class News {
   count: number;
   page: number;
   totalPages: number;
@@ -10,7 +10,7 @@ export class News{
   showingTo: number;
   items: Item[];
 }
-export class Item{
+export class Item {
   id: number;
   tipo: string;
   titulo: string;
@@ -27,13 +27,14 @@ export class Item{
   article: Article;
   save = false;
 }
-export class Photos{
+export class Photos {
   image_fulltext: string;
   image_intro: string;
 }
-export class Article{
+export class Article {
   title: string;
   subtitle: string;
   metadata: string;
   text: string;
+  textIndented: string[];
 }

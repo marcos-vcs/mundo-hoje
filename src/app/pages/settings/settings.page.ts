@@ -23,18 +23,20 @@ export class SettingsPage implements OnInit {
 
   async ngOnInit() {
     await this.storage.openStore();
-    const favorites = await (await this.storage.getItem('favorites')).toString();
-    this.itens = favorites ? JSON.parse(favorites) as Item[] : [];
+    const favorites = await (
+      await this.storage.getItem('favorites')
+    ).toString();
+    this.itens = favorites ? (JSON.parse(favorites) as Item[]) : [];
 
     await this.storage.init();
     await this.loadConfiguration();
     this.onToggleColorTheme();
   }
 
-  async ionViewWillLeave(){
+  async ionViewWillLeave() {
     await this.ngOnInit();
   }
-  async ionViewWillEnter(){
+  async ionViewWillEnter() {
     await this.ngOnInit();
   }
 
@@ -55,7 +57,10 @@ export class SettingsPage implements OnInit {
     } else {
       this.configuration.isDarkMode = true;
       this.storage.openStore();
-      this.storage.setItem('configurations', JSON.stringify(this.configuration));
+      this.storage.setItem(
+        'configurations',
+        JSON.stringify(this.configuration)
+      );
     }
 
     loading.dismiss();
@@ -82,32 +87,36 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  async deleteAllFavorites(){
+  async deleteAllFavorites() {
     const alert = await this.alertController.create({
       subHeader: `Caso confirme todas as notícias serão excluídos, tem certeza que deseja prosseguir?`,
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Confirmar',
-          role: 'confirm'
+          role: 'confirm',
         },
       ],
     });
     await alert.present();
     const role = await alert.onDidDismiss();
 
-    if(role.role === 'confirm'){
+    if (role.role === 'confirm') {
       this.storage.openStore();
       this.storage.removeItem('favorites');
-      this.toast.presentToast('Todas as notícias removidas com sucesso :)', 'top', 'success');
+      this.toast.presentToast(
+        'Todas as notícias removidas com sucesso :)',
+        'top',
+        'success'
+      );
       await this.storage.openStore();
-      const favorites = await (await this.storage.getItem('favorites')).toString();
-      this.itens = favorites ? JSON.parse(favorites) as Item[] : [];
+      const favorites = await (
+        await this.storage.getItem('favorites')
+      ).toString();
+      this.itens = favorites ? (JSON.parse(favorites) as Item[]) : [];
     }
-
   }
-
 }

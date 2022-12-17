@@ -18,7 +18,7 @@ import { CoinsMetadata } from '../models/coins';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomePage implements OnInit {
   //#region variaveis
@@ -52,7 +52,7 @@ export class HomePage implements OnInit {
     this.storage.init();
     this.loadConfiguration();
     this.getCoins();
-    setInterval(() => this.getCoins(),30000);
+    setInterval(() => this.getCoins(), 30000);
   }
 
   async ionViewWillEnter() {
@@ -79,7 +79,6 @@ export class HomePage implements OnInit {
       } else {
         document.body.setAttribute('color-theme', 'light');
       }
-
     }
   }
 
@@ -95,14 +94,14 @@ export class HomePage implements OnInit {
     }, 500);
   }
 
-  getCoins(){
+  getCoins() {
     this.economyService.getCoins().subscribe({
       next: (v) => {
         this.coins = this.economyService.getMetadata(v);
       },
       error: (e) => {
         console.log(e);
-      }
+      },
     });
   }
 
@@ -124,18 +123,24 @@ export class HomePage implements OnInit {
           this.news.items = itensPreUpdate;
 
           this.notFoundMsg = this.news.count > 0 ? false : true;
-          this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
-
+          this.allLoadMsg =
+            this.news.totalPages === this.news.page && !this.notFoundMsg
+              ? true
+              : false;
         },
         error: (e) => {
           if (e.status === 0) {
             this.page--;
-            this.toast.presentToast('Você está sem internet :(','top','danger');
+            this.toast.presentToast(
+              'Você está sem internet :(',
+              'top',
+              'danger'
+            );
           }
 
           this.notFoundMsg = true;
           this.loadCenter = false;
-        }
+        },
       });
     } else {
       this.page = 1;
@@ -150,7 +155,6 @@ export class HomePage implements OnInit {
 
   getNews() {
     if (this.searchValue.length === 0) {
-
       this.newsService.get(this.page, this.limit).subscribe({
         next: async (v) => {
           this.notFoundMsg = false;
@@ -167,16 +171,21 @@ export class HomePage implements OnInit {
           this.news = v;
           this.news.items = itensPreUpdate;
 
-
           this.notFoundMsg = this.news.items.length > 0 ? false : true;
-          this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
-
+          this.allLoadMsg =
+            this.news.totalPages === this.news.page && !this.notFoundMsg
+              ? true
+              : false;
         },
         error: (e) => {
           if (e.status === 0) {
             this.page--;
             this.allLoadMsg = true;
-            this.toast.presentToast('Você está sem internet :(','top','danger');
+            this.toast.presentToast(
+              'Você está sem internet :(',
+              'top',
+              'danger'
+            );
             return;
           }
 
@@ -185,9 +194,8 @@ export class HomePage implements OnInit {
         },
         complete: () => {
           this.loadCenter = false;
-        }
+        },
       });
-
     }
   }
 
@@ -222,7 +230,10 @@ export class HomePage implements OnInit {
     this.newsService.getArticle(item).subscribe({
       next: async (v) => {
         item = v;
-
+        item.article.textIndented = [];
+        item.article.text
+          .split('<br>')
+          .forEach((p) => item.article.textIndented.push(p));
         const modal = await this.modalCtrl.create({
           component: NewsDetailComponent,
           componentProps: { data: item },
@@ -245,7 +256,6 @@ export class HomePage implements OnInit {
   }
 
   async favorite(item: Item) {
-
     const loading = await this.loadingCtrl.create({
       message: 'Adicionando a lista de favoritos 📜 Aguarde...',
       duration: 10000,
@@ -260,8 +270,10 @@ export class HomePage implements OnInit {
         this.news.items[index].save = !item.save;
 
         await this.storage.openStore();
-        const favorites = await (await this.storage.getItem('favorites')).toString();
-        let itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+        const favorites = await (
+          await this.storage.getItem('favorites')
+        ).toString();
+        let itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
 
         if (!itens.find((i) => i.id === item.id)) {
           item.save = true;
@@ -275,28 +287,39 @@ export class HomePage implements OnInit {
         this.storage.setItem('favorites', JSON.stringify(itens));
 
         if (this.news.items[index].save) {
-          this.toast.presentToast('Notícia adicionada aos itens favoritados.','top','success');
+          this.toast.presentToast(
+            'Notícia adicionada aos itens favoritados.',
+            'top',
+            'success'
+          );
         } else {
-          this.toast.presentToast('Notícia removida dos itens favoritados.','top','danger');
+          this.toast.presentToast(
+            'Notícia removida dos itens favoritados.',
+            'top',
+            'danger'
+          );
         }
       },
       error: (e) => {
-        this.toast.presentToast('Não foi possível favoritar a notícia :(','top','danger');
+        this.toast.presentToast(
+          'Não foi possível favoritar a notícia :(',
+          'top',
+          'danger'
+        );
         console.log(e);
       },
       complete: () => {
         loading.dismiss();
-      }
+      },
     });
-
   }
 
-  private async isFavorited(item: Item): Promise<boolean>{
+  private async isFavorited(item: Item): Promise<boolean> {
     await this.storage.openStore();
-    const favorites = await (await this.storage.getItem('favorites')).toString();
-    const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+    const favorites = await (
+      await this.storage.getItem('favorites')
+    ).toString();
+    const itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
     return itens.find((i) => i.id === item.id) ? true : false;
   }
-
 }
-

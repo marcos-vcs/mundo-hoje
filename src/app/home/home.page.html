@@ -5,7 +5,8 @@
       Mundo hoje
     </ion-title>
 
-    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;"
+      placeholder="Buscar"></ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
@@ -15,8 +16,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <swiper [slidesPerView]="1"
-          [spaceBetween]="-85">
+  <swiper [slidesPerView]="1" [spaceBetween]="-130">
     <ng-template swiperSlide *ngFor="let coin of coins">
       <ion-card class="br-15 height-270-px widht-60-percent">
         <ion-card-header>
@@ -42,15 +42,18 @@
           <ion-grid [fixed]="true" style="margin-top: -10px;">
             <ion-row>
               <ion-col class="fw-bold">Variação: {{coin.varBid}}
-                <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;" color="success" name="trending-down-outline"></ion-icon></span>
-                <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger" name="trending-up-outline"></ion-icon></span>
+                <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;"
+                    color="success" name="trending-down-outline"></ion-icon></span>
+                <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger"
+                    name="trending-up-outline"></ion-icon></span>
               </ion-col>
             </ion-row>
           </ion-grid>
 
           <ion-grid [fixed]="true" style="margin-top: -10px;">
             <ion-row>
-              <ion-col class="fw-bold">Última atualização: <br>{{coin.create_date | date:'dd/MM/yyyy H:mm:ss'}}</ion-col>
+              <ion-col class="fw-bold">Última atualização: <br>{{coin.create_date | date:'dd/MM/yyyy
+                H:mm:ss'}}</ion-col>
             </ion-row>
           </ion-grid>
 
@@ -66,31 +69,35 @@
   </div>
 
   <span *ngIf="!loadCenter">
-    <ion-card *ngFor="let item of news.items">
-    <ion-item (click)="openDetails(item)">
-      <img class="mt-15" [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
-    </ion-item>
+    <ion-card class="mb-10" *ngFor="let item of news.items">
+      <ion-card-title (click)="openDetails(item)" class="title">
+        {{item.titulo}}
+      </ion-card-title>
+      <ion-item (click)="openDetails(item)">
+        <img class="mt-15" [src]="item.photos.image_intro"
+          onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
+      </ion-item>
 
-    <ion-card-subtitle>
-      <div>
-        Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
-      </div>
+      <ion-card-subtitle>
+        <div>
+          Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
+        </div>
 
-      <div class="options-list">
-        <ion-button (click)="favorite(item)" id="favorite-btn" size="small" fill="clear" shape="round">
-          <span *ngIf="item.save">
-            <ion-icon class="btn-red" name="heart"></ion-icon>
-          </span>
-          <span *ngIf="!item.save">
-            <ion-icon class="btn-gray" name="heart"></ion-icon>
-          </span>
-        </ion-button>
-      </div>
+        <div class="options-list">
+          <ion-button (click)="favorite(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+            <span *ngIf="item.save">
+              <ion-icon class="btn-red" name="heart"></ion-icon>
+            </span>
+            <span *ngIf="!item.save">
+              <ion-icon class="btn-gray" name="heart"></ion-icon>
+            </span>
+          </ion-button>
+        </div>
 
-    </ion-card-subtitle>
-    <ion-card-title class="ion-padding" (click)="openDetails(item)">
-      {{item.introducao}}
-    </ion-card-title>
+      </ion-card-subtitle>
+      <ion-card-title class="ion-padding" (click)="openDetails(item)">
+        {{item.introducao}}
+      </ion-card-title>
     </ion-card>
   </span>
 
@@ -99,8 +106,7 @@
   </p>
 
   <ion-infinite-scroll *ngIf="!allLoadMsg && !loadCenter" threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="dots">
+    <ion-infinite-scroll-content loadingSpinner="dots">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 

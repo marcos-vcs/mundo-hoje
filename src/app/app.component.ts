@@ -8,7 +8,6 @@ import { AnimationController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-
   constructor(private animationCtrl: AnimationController) {}
 
   customTransition = (baseEl: any, opts?: any) => {
@@ -33,5 +32,4 @@ export class AppComponent {
       .addAnimation([anim1, anim2]);
     return anim2;
   };
-
 }
