@@ -257,7 +257,7 @@ export class HomePage implements OnInit {
 
   async favorite(item: Item) {
     const loading = await this.loadingCtrl.create({
-      message: 'Adicionando a lista de favoritos 📜 Aguarde...',
+      message: 'Carregando, aguarde...',
       duration: 10000,
     });
 
@@ -266,6 +266,10 @@ export class HomePage implements OnInit {
     this.newsService.getArticle(item).subscribe({
       next: async (v) => {
         item = v;
+        item.article.textIndented = [];
+        item.article.text
+          .split('<br>')
+          .forEach((p) => item.article.textIndented.push(p));
         const index = this.news.items.findIndex((obj) => obj.id === item.id);
         this.news.items[index].save = !item.save;
 
