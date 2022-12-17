@@ -14,6 +14,7 @@ export class ToastService {
       message: text,
       duration: 1500,
       position: positionOnScreen,
+      cssClass: 'toast',
       color: toastColor
     });
     await toast.present();

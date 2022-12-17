@@ -14,7 +14,8 @@ import { DatePipe } from '@angular/common';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule],
+    HttpClientModule
+  ],
   providers: [
     DatePipe,
     HttpClient,

@@ -5,40 +5,100 @@
       Mundo hoje
     </ion-title>
 
-    <ion-searchbar animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="notFound" *ngIf="!notice.items">
+  <swiper [slidesPerView]="1"
+          [spaceBetween]="-85">
+    <ng-template swiperSlide *ngFor="let coin of coins">
+      <ion-card class="br-15 height-270-px widht-60-percent">
+        <ion-card-header>
+          <ion-card-subtitle class="p-0">{{coin.name}}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content class="p-0" style="margin-top: -15px;">
+
+          <ion-grid [fixed]="true">
+            <ion-row>
+              <ion-col class="fw-bold">Compra: <br>{{coin.bid}}</ion-col>
+              <ion-col class="fw-bold">Venda: <br>{{coin.ask}}</ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid [fixed]="true" style="margin-top: -10px;">
+            <ion-row>
+              <ion-col class="fw-bold">Máximo: <br>{{coin.high}}</ion-col>
+              <ion-col class="fw-bold">Mínimo: <br>{{coin.low}}</ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid [fixed]="true" style="margin-top: -10px;">
+            <ion-row>
+              <ion-col class="fw-bold">Variação: {{coin.varBid}}
+                <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;" color="success" name="trending-down-outline"></ion-icon></span>
+                <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger" name="trending-up-outline"></ion-icon></span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid [fixed]="true" style="margin-top: -10px;">
+            <ion-row>
+              <ion-col class="fw-bold">Última atualização: <br>{{coin.create_date | date:'dd/MM/yyyy H:mm:ss'}}</ion-col>
+            </ion-row>
+          </ion-grid>
+
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
+
+  </swiper>
+
+  <div class="notFoundMsg" *ngIf="notFoundMsg || !news.items && (news.count === 0 && !loadCenter)">
     Nenhuma notícia encontrada <br>
     <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
   </div>
 
-  <ion-card *ngFor="let item of notice.items">
-    <ion-item>
-      <img [src]="item.photos.image_intro" width="100%">
+  <span *ngIf="!loadCenter">
+    <ion-card *ngFor="let item of news.items">
+    <ion-item (click)="openDetails(item)">
+      <img class="mt-15" [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
     </ion-item>
 
     <ion-card-subtitle>
-      Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
+      <div>
+        Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
+      </div>
+
+      <div class="options-list">
+        <ion-button (click)="favorite(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+          <span *ngIf="item.save">
+            <ion-icon class="btn-red" name="heart"></ion-icon>
+          </span>
+          <span *ngIf="!item.save">
+            <ion-icon class="btn-gray" name="heart"></ion-icon>
+          </span>
+        </ion-button>
+      </div>
+
     </ion-card-subtitle>
-    <ion-card-title>
+    <ion-card-title class="ion-padding" (click)="openDetails(item)">
       {{item.introducao}}
     </ion-card-title>
-  </ion-card>
+    </ion-card>
+  </span>
 
-  <ion-content class="allLoads" *ngIf="allLoads">
-    Todas as notícias carregadas
-  </ion-content>
+  <p class="allLoadsMsg" *ngIf="allLoadMsg && (!loadCenter && !notFoundMsg)">
+    Todas as notícias foram carregadas.
+  </p>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll *ngIf="!allLoadMsg && !loadCenter" threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content
       loadingSpinner="dots">
     </ion-infinite-scroll-content>
@@ -48,7 +108,4 @@
     <ion-spinner class="spinnerCenter" name="dots"></ion-spinner>
   </ion-content>
 
-  <div id="container">
-
-  </div>
 </ion-content>

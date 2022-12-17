@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalhes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="btn-cancel" color="medium" (click)="cancel()">Voltar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="title">{{data.article.title}}</div>
+  <div id="subtitle">{{data.article.subtitle}}</div>
+  <div><ion-img style="margin-top:10px;margin-bottom: 5px;" [src]="data.photos.image_fulltext"></ion-img></div>
+  <div id="publicacao-date">
+    <div id="metadatas">{{data.article.metadata}}</div>
+    Publicado em: {{data.data_publicacao.toString().split(' ')[0]}}
+  </div>
+
+  <div id="article">
+    <p>{{data.article.text}}</p>
+  </div>
+
+</ion-content>

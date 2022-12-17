@@ -4,17 +4,54 @@
       Favoritos
     </ion-title>
 
-    <ion-searchbar animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;" placeholder="Buscar"></ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <div class="notFoundMsg" *ngIf="notFoundMsg">
+    Nenhuma notícia encontrada <br>
+    <img class="mt-15" src="../../assets/no-connection.png" alt="no connection" width="30%">
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <span *ngIf="!loadCenter">
+    <ion-card *ngFor="let item of news">
+    <ion-item (click)="openDetails(item)">
+      <img class="mt-15" [src]="item.photos.image_intro" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%">
+    </ion-item>
+
+    <ion-card-subtitle>
+      <div>
+        Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
+      </div>
+
+      <div class="options-list">
+        <ion-button (click)="removeNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+          <span *ngIf="item.save">
+            <ion-icon class="btn-red" name="heart"></ion-icon>
+          </span>
+          <span *ngIf="!item.save">
+            <ion-icon class="btn-gray" name="heart"></ion-icon>
+          </span>
+        </ion-button>
+      </div>
+
+    </ion-card-subtitle>
+    <ion-card-title class="ion-padding" (click)="openDetails(item)">
+      {{item.introducao}}
+    </ion-card-title>
+    </ion-card>
+  </span>
+
+  <p class="allLoadsMsg" *ngIf="allLoadMsg && !loadCenter && !notFoundMsg">
+    Todas as notícias foram carregadas.
+  </p>
 
   <ion-content *ngIf="loadCenter">
     <ion-spinner class="spinnerCenter" name="dots"></ion-spinner>

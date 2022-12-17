@@ -1,4 +1,6 @@
-export class Notice{
+/* eslint-disable @typescript-eslint/naming-convention */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export class News{
   count: number;
   page: number;
   totalPages: number;
@@ -13,22 +15,25 @@ export class Item{
   tipo: string;
   titulo: string;
   introducao: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   data_publicacao: Date;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   produto_id: number;
   produtos: string;
   editorias: string;
   imagens: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   produtos_relacionados: string;
   destaque: boolean;
   link: string;
   photos: Photos;
+  article: Article;
+  save = false;
 }
 export class Photos{
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   image_fulltext: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   image_intro: string;
+}
+export class Article{
+  title: string;
+  subtitle: string;
+  metadata: string;
+  text: string;
 }
