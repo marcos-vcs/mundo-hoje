@@ -187,7 +187,6 @@ export class HomePage implements OnInit {
               'top',
               'danger'
             );
-            return;
           }
 
           this.notFoundMsg = true;
