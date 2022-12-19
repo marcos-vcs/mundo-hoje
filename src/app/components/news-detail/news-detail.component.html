@@ -17,7 +17,7 @@
   </div>
 
   <div id="article" *ngFor="let text of data.article.textIndented">
-    <p>{{text}}</p>
+    <p [class]="configuration.newsDetailAlign">{{text}}</p>
   </div>
 
 </ion-content>

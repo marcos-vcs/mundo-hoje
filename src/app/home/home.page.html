@@ -18,7 +18,7 @@
 
   <swiper [slidesPerView]="1" [spaceBetween]="-130">
     <ng-template swiperSlide *ngFor="let coin of coins">
-      <ion-card class="br-15 height-270-px widht-60-percent">
+      <ion-card class="br-15 height-280-px widht-60-percent">
         <ion-card-header>
           <ion-card-subtitle class="p-0">{{coin.name}}</ion-card-subtitle>
         </ion-card-header>
@@ -27,33 +27,51 @@
 
           <ion-grid [fixed]="true">
             <ion-row>
-              <ion-col class="fw-bold">Compra: <br>{{coin.bid}}</ion-col>
-              <ion-col class="fw-bold">Venda: <br>{{coin.ask}}</ion-col>
-            </ion-row>
-          </ion-grid>
-
-          <ion-grid [fixed]="true" style="margin-top: -10px;">
-            <ion-row>
-              <ion-col class="fw-bold">Máximo: <br>{{coin.high}}</ion-col>
-              <ion-col class="fw-bold">Mínimo: <br>{{coin.low}}</ion-col>
-            </ion-row>
-          </ion-grid>
-
-          <ion-grid [fixed]="true" style="margin-top: -10px;">
-            <ion-row>
-              <ion-col class="fw-bold">Variação: {{coin.varBid}}
-                <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;"
-                    color="success" name="trending-down-outline"></ion-icon></span>
-                <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger"
-                    name="trending-up-outline"></ion-icon></span>
+              <ion-col class="fw-bold">
+                <div class="fs-10">Compra:</div>
+                <span class="fs-14">{{coin.bid | currency:'BRL'}}</span>
+              </ion-col>
+              <ion-col class="fw-bold">
+                <div class="fs-10">Venda:</div>
+                <span class="fs-14">{{coin.ask | currency:'BRL'}}</span>
               </ion-col>
             </ion-row>
           </ion-grid>
 
           <ion-grid [fixed]="true" style="margin-top: -10px;">
             <ion-row>
-              <ion-col class="fw-bold">Última atualização: <br>{{coin.create_date | date:'dd/MM/yyyy
-                H:mm:ss'}}</ion-col>
+              <ion-col class="fw-bold">
+                <div class="fs-10">Máximo:</div>
+                <span class="fs-14">{{coin.high | currency:'BRL'}}</span>
+              </ion-col>
+              <ion-col class="fw-bold">
+                <div class="fs-10">Mínimo:</div>
+                <span class="fs-14">{{coin.low | currency:'BRL'}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid [fixed]="true" style="margin-top: -10px;">
+            <ion-row>
+              <ion-col class="fw-bold">
+                <fieldset class="br-15 p-0">
+                  <legend>Variação:</legend>
+                  {{coin.varBid}}%
+                  <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;"
+                    color="success" name="trending-down-outline"></ion-icon></span>
+                <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger"
+                    name="trending-up-outline"></ion-icon></span>
+                </fieldset>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid [fixed]="true" style="margin-top: -10px;">
+            <ion-row>
+              <ion-col class="fw-bold">
+                <div class="fs-10">Última atualização:</div>
+                <span class="fs-12">{{coin.create_date | date:'dd/MM/yyyy H:mm:ss'}}</span>
+              </ion-col>
             </ion-row>
           </ion-grid>
 

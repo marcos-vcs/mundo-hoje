@@ -56,6 +56,7 @@ export class SettingsPage implements OnInit {
       this.configuration = JSON.parse(configuration) as Configuration;
     } else {
       this.configuration.isDarkMode = true;
+      this.configuration.newsDetailAlign = 'text-align-left';
       this.storage.openStore();
       this.storage.setItem(
         'configurations',
@@ -64,6 +65,31 @@ export class SettingsPage implements OnInit {
     }
 
     loading.dismiss();
+  }
+
+  async recoveryConfiguration(){
+
+    const alert = await this.alertController.create({
+      subHeader: `Caso confirme a configuração será redefinida, deseja prosseguir?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          role: 'confirm',
+        },
+      ],
+    });
+    await alert.present();
+    const role = await alert.onDidDismiss();
+
+    if (role.role === 'confirm') {
+      await this.storage.openStore();
+      this.storage.removeItem('configurations');
+      this.loadConfiguration();
+    }
   }
 
   async updateConfiguration() {
