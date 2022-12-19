@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
 
 @Component({
   selector: 'app-tabs',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TabsPage implements OnInit {
 
-  constructor() { }
+  favoritesQuantity: number;
+
+  constructor(
+    private favoriteQuantityService: FavoritesQuantityService
+  ) { }
 
   ngOnInit() {
+    this.favoriteQuantityService.quantity.subscribe({
+      next: (v) => {
+        this.favoritesQuantity = v;
+      }
+    });
   }
 
 }

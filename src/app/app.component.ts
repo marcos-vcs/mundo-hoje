@@ -1,6 +1,7 @@
 /* eslint-disable no-var */
 import { Component } from '@angular/core';
 import { AnimationController } from '@ionic/angular';
+import { FavoritesQuantityService } from './services/favorites-quantity.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,11 @@ import { AnimationController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private animationCtrl: AnimationController) {}
+  constructor(
+    private animationCtrl: AnimationController,
+    private favoriteQuantityService: FavoritesQuantityService) {
+      this.favoriteQuantityService.updateFavoriteQuantity();
+    }
 
   customTransition = (baseEl: any, opts?: any) => {
     const anim1 = this.animationCtrl

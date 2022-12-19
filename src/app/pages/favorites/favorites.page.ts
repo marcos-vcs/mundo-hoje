@@ -3,6 +3,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { NewsDetailComponent } from 'src/app/components/news-detail/news-detail.component';
 import { ToastService } from 'src/app/components/tools/toast.service';
 import { Item } from 'src/app/models/news';
+import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -24,11 +25,13 @@ export class FavoritesPage implements OnInit {
   constructor(
     private storage: StorageService,
     private alertController: AlertController,
+    private favoriteQuantityService: FavoritesQuantityService,
     private modalCtrl: ModalController,
     private toast: ToastService
   ) {}
 
   ngOnInit() {
+    this.favoriteQuantityService.updateFavoriteQuantity();
     this.loadCenter = true;
     setTimeout(async () => {
       this.getNotices();
@@ -131,6 +134,7 @@ export class FavoritesPage implements OnInit {
         this.loadCenter = false;
       }, 300);
     }
+    this.favoriteQuantityService.updateFavoriteQuantity();
   }
 
   doRefresh(event) {

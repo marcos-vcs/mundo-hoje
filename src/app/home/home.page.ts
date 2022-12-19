@@ -13,6 +13,7 @@ import { NewsDetailComponent } from '../components/news-detail/news-detail.compo
 import { Configuration } from '../models/configuration';
 import { EconomyApiService } from '../services/economy-api.service';
 import { CoinsMetadata } from '../models/coins';
+import { FavoritesQuantityService } from '../services/favorites-quantity.service';
 
 @Component({
   selector: 'app-home',
@@ -40,6 +41,7 @@ export class HomePage implements OnInit {
     private storage: StorageService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
+    private favoriteQuantityService: FavoritesQuantityService,
     private toast: ToastService
   ) {
     this.news.items = [];
@@ -303,6 +305,7 @@ export class HomePage implements OnInit {
             'danger'
           );
         }
+        this.favoriteQuantityService.updateFavoriteQuantity();
       },
       error: (e) => {
         this.toast.presentToast(
@@ -310,6 +313,7 @@ export class HomePage implements OnInit {
           'top',
           'danger'
         );
+        this.favoriteQuantityService.updateFavoriteQuantity();
         console.log(e);
       },
       complete: () => {

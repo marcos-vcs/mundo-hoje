@@ -1,3 +1,4 @@
+import { FavoritesQuantityService } from './services/favorites-quantity.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -21,6 +22,7 @@ import { NewsDetailComponent } from './components/news-detail/news-detail.compon
     DatePipe,
     HttpClient,
     IbgeNoticeApiService,
+    FavoritesQuantityService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],

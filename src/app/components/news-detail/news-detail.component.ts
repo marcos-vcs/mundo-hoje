@@ -1,7 +1,8 @@
-import { Component, Sanitizer } from '@angular/core';
+import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
 import { Item } from 'src/app/models/news';
+import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
 
 @Component({
   selector: 'app-news-detail',
@@ -14,11 +15,12 @@ export class NewsDetailComponent {
 
   constructor(
     private modalCtrl: ModalController,
-    private sanitiser: Sanitizer,
+    private favoriteQuantityService: FavoritesQuantityService,
     public sanitizer: DomSanitizer
   ) {}
 
   cancel() {
+    this.favoriteQuantityService.updateFavoriteQuantity();
     return this.modalCtrl.dismiss('cancel');
   }
 
