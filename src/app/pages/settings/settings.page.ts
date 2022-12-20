@@ -4,6 +4,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Item } from 'src/app/models/news';
 import { ToastService } from 'src/app/components/tools/toast.service';
+import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
 
 @Component({
   selector: 'app-settings',
@@ -18,6 +19,7 @@ export class SettingsPage implements OnInit {
     private alertController: AlertController,
     private loadingCtrl: LoadingController,
     private storage: StorageService,
+    private favoriteQuantityService: FavoritesQuantityService,
     private toast: ToastService
   ) {}
 
@@ -68,7 +70,7 @@ export class SettingsPage implements OnInit {
   }
 
   async recoveryConfiguration(){
-
+    this.favoriteQuantityService.updateFavoriteQuantity();
     const alert = await this.alertController.create({
       subHeader: `Caso confirme a configuração será redefinida, deseja prosseguir?`,
       buttons: [
@@ -93,6 +95,7 @@ export class SettingsPage implements OnInit {
   }
 
   async updateConfiguration() {
+    this.favoriteQuantityService.updateFavoriteQuantity();
     const loading = await this.loadingCtrl.create({
       message: 'Salvando configurações locais, aguarde...',
       duration: 10000,
@@ -133,6 +136,7 @@ export class SettingsPage implements OnInit {
     if (role.role === 'confirm') {
       this.storage.openStore();
       this.storage.removeItem('favorites');
+      this.favoriteQuantityService.updateFavoriteQuantity();
       this.toast.presentToast(
         'Todas as notícias removidas com sucesso :)',
         'top',
