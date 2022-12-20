@@ -1,7 +1,7 @@
 import { Configuration } from './../../models/configuration';
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { Item } from 'src/app/models/news';
 import { ToastService } from 'src/app/components/tools/toast.service';
 import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
@@ -17,7 +17,6 @@ export class SettingsPage implements OnInit {
 
   constructor(
     private alertController: AlertController,
-    private loadingCtrl: LoadingController,
     private storage: StorageService,
     private favoriteQuantityService: FavoritesQuantityService,
     private toast: ToastService
@@ -43,12 +42,6 @@ export class SettingsPage implements OnInit {
   }
 
   async loadConfiguration() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Carregando configurações previamente salvas, aguarde...',
-      duration: 10000,
-    });
-    loading.present();
-
     await this.storage.openStore();
     const configuration = await (
       await this.storage.getItem('configurations')
@@ -69,8 +62,6 @@ export class SettingsPage implements OnInit {
         JSON.stringify(this.configuration)
       );
     }
-
-    loading.dismiss();
   }
 
   async recoveryConfiguration(){
@@ -101,16 +92,8 @@ export class SettingsPage implements OnInit {
 
   async updateConfiguration() {
     this.favoriteQuantityService.updateFavoriteQuantity();
-    const loading = await this.loadingCtrl.create({
-      message: 'Salvando configurações locais, aguarde...',
-      duration: 10000,
-    });
-    loading.present();
-
     await this.storage.openStore();
     this.storage.setItem('configurations', JSON.stringify(this.configuration));
-
-    loading.dismiss();
   }
 
   async updateNewsDetailAlign(){

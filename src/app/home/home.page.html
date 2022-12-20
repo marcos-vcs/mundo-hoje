@@ -102,7 +102,7 @@
         </div>
 
         <div class="options-list">
-          <ion-button (click)="favorite(item)" id="favorite-btn" [size]="configuration.noticeCardIconsSize" fill="clear" shape="round">
+          <ion-button (click)="favorite(item)" id="favorite-btn" size="small" fill="clear" shape="round">
             <span *ngIf="item.save">
               <ion-icon [size]="configuration.noticeCardIconsSize" class="btn-red" name="heart"></ion-icon>
             </span>
@@ -110,14 +110,14 @@
               <ion-icon [size]="configuration.noticeCardIconsSize" class="btn-gray" name="heart"></ion-icon>
             </span>
           </ion-button>
-          <ion-button (click)="shareNews(item)" id="favorite-btn" [size]="configuration.noticeCardIconsSize" fill="clear" shape="round">
+          <ion-button (click)="shareNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
             <ion-icon [size]="configuration.noticeCardIconsSize" name="share-social-outline"></ion-icon>
           </ion-button>
         </div>
 
       </ion-card-subtitle>
-      <ion-card-title class="ion-padding" (click)="openDetails(item)">
-        {{item.introducao}}
+      <ion-card-title [class]="configuration.newsDetailAlign" class="ion-padding" (click)="openDetails(item)">
+        <span>{{item.introducao}}</span>
       </ion-card-title>
     </ion-card>
   </span>
