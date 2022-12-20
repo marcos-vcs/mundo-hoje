@@ -37,16 +37,16 @@
         </div>
 
         <div class="options-list">
-          <ion-button (click)="removeNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
+          <ion-button (click)="removeNews(item)" id="favorite-btn" [size]="configuration.noticeCardIconsSize" fill="clear" shape="round">
             <span *ngIf="item.save">
-              <ion-icon class="btn-red" name="heart"></ion-icon>
+              <ion-icon [size]="configuration.noticeCardIconsSize" class="btn-red" name="heart"></ion-icon>
             </span>
             <span *ngIf="!item.save">
-              <ion-icon class="btn-gray" name="heart"></ion-icon>
+              <ion-icon [size]="configuration.noticeCardIconsSize" class="btn-gray" name="heart"></ion-icon>
             </span>
           </ion-button>
-          <ion-button (click)="shareNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
-            <ion-icon name="share-social-outline"></ion-icon>
+          <ion-button (click)="shareNews(item)" id="favorite-btn" [size]="configuration.noticeCardIconsSize" fill="clear" shape="round">
+            <ion-icon [size]="configuration.noticeCardIconsSize" name="share-social-outline"></ion-icon>
           </ion-button>
         </div>
 

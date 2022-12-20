@@ -26,6 +26,7 @@ export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   errorImage = '../../../assets/no-found.png';
+  configuration: Configuration;
   coins: CoinsMetadata[] = [];
   news: News = new News();
   searchValue = '';
@@ -78,7 +79,7 @@ export class HomePage implements OnInit {
 
     if (configuration) {
       const loadedConfigurations = JSON.parse(configuration) as Configuration;
-
+      this.configuration = loadedConfigurations;
       if (loadedConfigurations.isDarkMode) {
         document.body.setAttribute('color-theme', 'dark');
       } else {

@@ -57,8 +57,12 @@ export class SettingsPage implements OnInit {
     if (configuration.length > 3) {
       this.configuration = JSON.parse(configuration) as Configuration;
     } else {
+
+      //default configuration
       this.configuration.isDarkMode = true;
       this.configuration.newsDetailAlign = 'text-align-left';
+      this.configuration.noticeCardIconsSize = 'default';
+
       this.storage.openStore();
       this.storage.setItem(
         'configurations',
@@ -110,6 +114,10 @@ export class SettingsPage implements OnInit {
   }
 
   async updateNewsDetailAlign(){
+    this.updateConfiguration();
+  }
+
+  async updateNoticeCardIconsSize(){
     this.updateConfiguration();
   }
 

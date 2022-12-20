@@ -3,6 +3,7 @@ import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { AlertController, ModalController } from '@ionic/angular';
 import { NewsDetailComponent } from 'src/app/components/news-detail/news-detail.component';
 import { ToastService } from 'src/app/components/tools/toast.service';
+import { Configuration } from 'src/app/models/configuration';
 import { Item } from 'src/app/models/news';
 import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -14,6 +15,7 @@ import { StorageService } from 'src/app/services/storage.service';
 })
 export class FavoritesPage implements OnInit {
   //#region variaveis
+  configuration: Configuration;
   news: Item[] = [];
   searchValue = '';
   loadDown = false;
@@ -40,13 +42,33 @@ export class FavoritesPage implements OnInit {
     }, 200);
     this.loadCenter = false;
     this.storage.init();
+    this.loadConfiguration();
   }
 
   async ionViewWillEnter() {
+    this.loadConfiguration();
     await this.getNotices();
   }
   async ionPageWillLeave() {
+    this.loadConfiguration();
     await this.getNotices();
+  }
+
+  async loadConfiguration() {
+    await this.storage.openStore();
+    const configuration = await (
+      await this.storage.getItem('configurations')
+    ).toString();
+
+    if (configuration) {
+      const loadedConfigurations = JSON.parse(configuration) as Configuration;
+      this.configuration = loadedConfigurations;
+      if (loadedConfigurations.isDarkMode) {
+        document.body.setAttribute('color-theme', 'dark');
+      } else {
+        document.body.setAttribute('color-theme', 'light');
+      }
+    }
   }
 
   getSearchbarValue() {
