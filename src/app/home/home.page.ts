@@ -246,6 +246,7 @@ export class HomePage implements OnInit {
         await modal.onWillDismiss();
       },
       error: (e) => {
+        loading.dismiss();
         this.toast.presentToast(
           'Erro ao carregar detalhes da noticia :(',
           'top',

@@ -22,7 +22,7 @@
       <ion-col class="ion-padding mt-negative-20" size="12">
         <ion-item lines="inset" class="br-15">
           <ion-label position="stacked" style="font-size: 14px;">Alinhamento das notícias</ion-label>
-          <ion-select [(ngModel)]="configuration.newsDetailAlign" interface="popover" placeholder="Personalize do seu jeito">
+          <ion-select [(ngModel)]="configuration.newsDetailAlign" (ionChange)="updateNewsDetailAlign()" interface="popover" placeholder="Personalize do seu jeito">
             <ion-select-option value="text-align-left">A esquerda</ion-select-option>
             <ion-select-option value="text-align-right">A direita</ion-select-option>
             <ion-select-option value="text-align-justify">Justificado</ion-select-option>
@@ -58,13 +58,5 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col size="6">
-        <ion-button style="float: right;" [routerLink]="['']">Voltar</ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button (click)="updateConfiguration()" style="float: left;">Salvar</ion-button>
-      </ion-col>
-    </ion-row>
   </ion-grid>
 </ion-content>

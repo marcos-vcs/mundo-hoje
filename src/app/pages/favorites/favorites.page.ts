@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { AlertController, ModalController } from '@ionic/angular';
 import { NewsDetailComponent } from 'src/app/components/news-detail/news-detail.component';
 import { ToastService } from 'src/app/components/tools/toast.service';
@@ -25,6 +26,7 @@ export class FavoritesPage implements OnInit {
   constructor(
     private storage: StorageService,
     private alertController: AlertController,
+    private socialSharing: SocialSharing,
     private favoriteQuantityService: FavoritesQuantityService,
     private modalCtrl: ModalController,
     private toast: ToastService
@@ -153,4 +155,16 @@ export class FavoritesPage implements OnInit {
     modal.present();
     await modal.onWillDismiss();
   }
+
+  shareNews(item: Item){
+    this.socialSharing.share(null, null, null, item.link).then(
+      ()=>{
+        this.toast.presentToast('Notícia compartilhada com sucesso','top','success');
+    }).catch(
+      ()=>{
+        this.toast.presentToast('Erro ao compartilhar notícia','top','danger');
+      }
+      );
+  }
+
 }

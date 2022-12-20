@@ -91,6 +91,7 @@ export class SettingsPage implements OnInit {
       await this.storage.openStore();
       this.storage.removeItem('configurations');
       this.loadConfiguration();
+      this.updateConfiguration();
     }
   }
 
@@ -108,12 +109,17 @@ export class SettingsPage implements OnInit {
     loading.dismiss();
   }
 
+  async updateNewsDetailAlign(){
+    this.updateConfiguration();
+  }
+
   onToggleColorTheme() {
     if (this.configuration.isDarkMode) {
       document.body.setAttribute('color-theme', 'dark');
     } else {
       document.body.setAttribute('color-theme', 'light');
     }
+    this.updateConfiguration();
   }
 
   async deleteAllFavorites() {
