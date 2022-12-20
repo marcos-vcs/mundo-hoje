@@ -9,6 +9,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { IbgeNoticeApiService } from './services/ibge-notice-api.service';
 import { DatePipe } from '@angular/common';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 
 @NgModule({
   declarations: [AppComponent, NewsDetailComponent],
@@ -19,6 +20,7 @@ import { NewsDetailComponent } from './components/news-detail/news-detail.compon
     HttpClientModule
   ],
   providers: [
+    SocialSharing,
     DatePipe,
     HttpClient,
     IbgeNoticeApiService,

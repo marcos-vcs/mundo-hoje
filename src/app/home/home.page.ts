@@ -14,6 +14,7 @@ import { Configuration } from '../models/configuration';
 import { EconomyApiService } from '../services/economy-api.service';
 import { CoinsMetadata } from '../models/coins';
 import { FavoritesQuantityService } from '../services/favorites-quantity.service';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,7 @@ export class HomePage implements OnInit {
     private economyService: EconomyApiService,
     private newsService: IbgeNoticeApiService,
     private storage: StorageService,
+    private socialSharing: SocialSharing,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private favoriteQuantityService: FavoritesQuantityService,
@@ -322,6 +324,17 @@ export class HomePage implements OnInit {
     });
   }
 
+  shareNews(item: Item){
+    this.socialSharing.share(null, null, null, item.link).then(
+      ()=>{
+        this.toast.presentToast('Notícia compartilhada com sucesso','top','success');
+    }).catch(
+      ()=>{
+        this.toast.presentToast('Erro ao compartilhar notícia','top','danger');
+      }
+      );
+  }
+
   private async isFavorited(item: Item): Promise<boolean> {
     await this.storage.openStore();
     const favorites = await (
@@ -330,4 +343,5 @@ export class HomePage implements OnInit {
     const itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
     return itens.find((i) => i.id === item.id) ? true : false;
   }
+
 }
