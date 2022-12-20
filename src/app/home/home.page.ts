@@ -225,7 +225,7 @@ export class HomePage implements OnInit {
 
   async openDetails(item: Item) {
     const loading = await this.loadingCtrl.create({
-      message: 'Carregando os detalhes da notícia 📜 Aguarde...',
+      message: 'Carregando os detalhes da notícia. Aguarde...',
       duration: 10000,
     });
 
