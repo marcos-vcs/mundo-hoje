@@ -1,26 +1,31 @@
-*{
+* {
   font-family: 'Open Sans', sans-serif;
 }
-#title{
+
+#title {
   font-weight: bold;
   color: #797979;
   margin-bottom: 20px;
   font-size: 16px;
 }
-#subtitle{
+
+#subtitle {
   font-size: 12px;
   margin-bottom: 10px;
 }
-#publicacao-date{
+
+#publicacao-date {
   font-weight: bold;
   color: #797979;
   font-size: 12px;
   margin-bottom: 15px;
 }
-#article{
-  text-align: justify;
+
+#article {
+  text-align: left;
 }
-.btn-cancel{
+
+.btn-cancel {
   font-size: 12px;
   text-transform: capitalize;
 }

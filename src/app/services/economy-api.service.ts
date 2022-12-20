@@ -33,20 +33,6 @@ export class EconomyApiService {
     });
 
     metadatas.push({
-      code:        coins.USDBRLT.code,
-      codein:      coins.USDBRLT.codein,
-      name:        coins.USDBRLT.name,
-      high:        coins.USDBRLT.high,
-      low:         coins.USDBRLT.low,
-      varBid:      coins.USDBRLT.varBid,
-      pctChange:   coins.USDBRLT.pctChange,
-      bid:         coins.USDBRLT.bid,
-      ask:         coins.USDBRLT.ask,
-      timestamp:   coins.USDBRLT.timestamp,
-      create_date: coins.USDBRLT.create_date
-    });
-
-    metadatas.push({
       code:        coins.EURBRL.code,
       codein:      coins.EURBRL.codein,
       name:        coins.EURBRL.name,
@@ -96,7 +82,7 @@ export class EconomyApiService {
       low:         coins.BTCBRL.low,
       varBid:      coins.BTCBRL.varBid,
       pctChange:   coins.BTCBRL.pctChange,
-      bid:         coins.BTCBRL.bid,
+      bid:         (coins.BTCBRL.bid as unknown as number * 1000).toString(),
       ask:         coins.BTCBRL.ask,
       timestamp:   coins.BTCBRL.timestamp,
       create_date: coins.BTCBRL.create_date
@@ -110,7 +96,7 @@ export class EconomyApiService {
       low:         coins.ETHBRL.low,
       varBid:      coins.ETHBRL.varBid,
       pctChange:   coins.ETHBRL.pctChange,
-      bid:         coins.ETHBRL.bid,
+      bid:         (coins.ETHBRL.bid as unknown as number * 1000).toString(),
       ask:         coins.ETHBRL.ask,
       timestamp:   coins.ETHBRL.timestamp,
       create_date: coins.ETHBRL.create_date

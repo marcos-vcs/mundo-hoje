@@ -13,16 +13,20 @@ import { NewsDetailComponent } from '../components/news-detail/news-detail.compo
 import { Configuration } from '../models/configuration';
 import { EconomyApiService } from '../services/economy-api.service';
 import { CoinsMetadata } from '../models/coins';
+import { FavoritesQuantityService } from '../services/favorites-quantity.service';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  errorImage = '../../../assets/no-found.png';
+  configuration: Configuration;
   coins: CoinsMetadata[] = [];
   news: News = new News();
   searchValue = '';
@@ -37,8 +41,10 @@ export class HomePage implements OnInit {
     private economyService: EconomyApiService,
     private newsService: IbgeNoticeApiService,
     private storage: StorageService,
+    private socialSharing: SocialSharing,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
+    private favoriteQuantityService: FavoritesQuantityService,
     private toast: ToastService
   ) {
     this.news.items = [];
@@ -52,7 +58,7 @@ export class HomePage implements OnInit {
     this.storage.init();
     this.loadConfiguration();
     this.getCoins();
-    setInterval(() => this.getCoins(),30000);
+    setInterval(() => this.getCoins(), 30000);
   }
 
   async ionViewWillEnter() {
@@ -73,13 +79,12 @@ export class HomePage implements OnInit {
 
     if (configuration) {
       const loadedConfigurations = JSON.parse(configuration) as Configuration;
-
+      this.configuration = loadedConfigurations;
       if (loadedConfigurations.isDarkMode) {
         document.body.setAttribute('color-theme', 'dark');
       } else {
         document.body.setAttribute('color-theme', 'light');
       }
-
     }
   }
 
@@ -95,14 +100,14 @@ export class HomePage implements OnInit {
     }, 500);
   }
 
-  getCoins(){
+  getCoins() {
     this.economyService.getCoins().subscribe({
       next: (v) => {
         this.coins = this.economyService.getMetadata(v);
       },
       error: (e) => {
         console.log(e);
-      }
+      },
     });
   }
 
@@ -124,18 +129,24 @@ export class HomePage implements OnInit {
           this.news.items = itensPreUpdate;
 
           this.notFoundMsg = this.news.count > 0 ? false : true;
-          this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
-
+          this.allLoadMsg =
+            this.news.totalPages === this.news.page && !this.notFoundMsg
+              ? true
+              : false;
         },
         error: (e) => {
           if (e.status === 0) {
             this.page--;
-            this.toast.presentToast('Você está sem internet :(','top','danger');
+            this.toast.presentToast(
+              'Você está sem internet :(',
+              'top',
+              'danger'
+            );
           }
 
           this.notFoundMsg = true;
           this.loadCenter = false;
-        }
+        },
       });
     } else {
       this.page = 1;
@@ -150,7 +161,6 @@ export class HomePage implements OnInit {
 
   getNews() {
     if (this.searchValue.length === 0) {
-
       this.newsService.get(this.page, this.limit).subscribe({
         next: async (v) => {
           this.notFoundMsg = false;
@@ -167,17 +177,21 @@ export class HomePage implements OnInit {
           this.news = v;
           this.news.items = itensPreUpdate;
 
-
           this.notFoundMsg = this.news.items.length > 0 ? false : true;
-          this.allLoadMsg = this.news.totalPages === this.news.page && !this.notFoundMsg ? true : false;
-
+          this.allLoadMsg =
+            this.news.totalPages === this.news.page && !this.notFoundMsg
+              ? true
+              : false;
         },
         error: (e) => {
           if (e.status === 0) {
             this.page--;
             this.allLoadMsg = true;
-            this.toast.presentToast('Você está sem internet :(','top','danger');
-            return;
+            this.toast.presentToast(
+              'Você está sem internet :(',
+              'top',
+              'danger'
+            );
           }
 
           this.notFoundMsg = true;
@@ -185,9 +199,8 @@ export class HomePage implements OnInit {
         },
         complete: () => {
           this.loadCenter = false;
-        }
+        },
       });
-
     }
   }
 
@@ -213,7 +226,7 @@ export class HomePage implements OnInit {
 
   async openDetails(item: Item) {
     const loading = await this.loadingCtrl.create({
-      message: 'Carregando os detalhes da notícia 📜 Aguarde...',
+      message: 'Carregando os detalhes da notícia. Aguarde...',
       duration: 10000,
     });
 
@@ -222,7 +235,10 @@ export class HomePage implements OnInit {
     this.newsService.getArticle(item).subscribe({
       next: async (v) => {
         item = v;
-
+        item.article.textIndented = [];
+        item.article.text
+          .split('<br>')
+          .forEach((p) => item.article.textIndented.push(p));
         const modal = await this.modalCtrl.create({
           component: NewsDetailComponent,
           componentProps: { data: item },
@@ -231,6 +247,7 @@ export class HomePage implements OnInit {
         await modal.onWillDismiss();
       },
       error: (e) => {
+        loading.dismiss();
         this.toast.presentToast(
           'Erro ao carregar detalhes da noticia :(',
           'top',
@@ -245,9 +262,8 @@ export class HomePage implements OnInit {
   }
 
   async favorite(item: Item) {
-
     const loading = await this.loadingCtrl.create({
-      message: 'Adicionando a lista de favoritos 📜 Aguarde...',
+      message: 'Carregando, aguarde...',
       duration: 10000,
     });
 
@@ -256,12 +272,18 @@ export class HomePage implements OnInit {
     this.newsService.getArticle(item).subscribe({
       next: async (v) => {
         item = v;
+        item.article.textIndented = [];
+        item.article.text
+          .split('<br>')
+          .forEach((p) => item.article.textIndented.push(p));
         const index = this.news.items.findIndex((obj) => obj.id === item.id);
         this.news.items[index].save = !item.save;
 
         await this.storage.openStore();
-        const favorites = await (await this.storage.getItem('favorites')).toString();
-        let itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+        const favorites = await (
+          await this.storage.getItem('favorites')
+        ).toString();
+        let itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
 
         if (!itens.find((i) => i.id === item.id)) {
           item.save = true;
@@ -275,28 +297,53 @@ export class HomePage implements OnInit {
         this.storage.setItem('favorites', JSON.stringify(itens));
 
         if (this.news.items[index].save) {
-          this.toast.presentToast('Notícia adicionada aos itens favoritados.','top','success');
+          this.toast.presentToast(
+            'Notícia adicionada aos itens favoritados.',
+            'top',
+            'success'
+          );
         } else {
-          this.toast.presentToast('Notícia removida dos itens favoritados.','top','danger');
+          this.toast.presentToast(
+            'Notícia removida dos itens favoritados.',
+            'top',
+            'danger'
+          );
         }
+        this.favoriteQuantityService.updateFavoriteQuantity();
       },
       error: (e) => {
-        this.toast.presentToast('Não foi possível favoritar a notícia :(','top','danger');
+        this.toast.presentToast(
+          'Não foi possível favoritar a notícia :(',
+          'top',
+          'danger'
+        );
+        this.favoriteQuantityService.updateFavoriteQuantity();
         console.log(e);
       },
       complete: () => {
         loading.dismiss();
-      }
+      },
     });
-
   }
 
-  private async isFavorited(item: Item): Promise<boolean>{
+  shareNews(item: Item){
+    this.socialSharing.share(null, null, null, item.link).then(
+      ()=>{
+        this.toast.presentToast('Notícia compartilhada com sucesso','top','success');
+    }).catch(
+      ()=>{
+        this.toast.presentToast('Erro ao compartilhar notícia','top','danger');
+      }
+      );
+  }
+
+  private async isFavorited(item: Item): Promise<boolean> {
     await this.storage.openStore();
-    const favorites = await (await this.storage.getItem('favorites')).toString();
-    const itens: Item[] = favorites ? JSON.parse(favorites) as Item[] : [];
+    const favorites = await (
+      await this.storage.getItem('favorites')
+    ).toString();
+    const itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
     return itens.find((i) => i.id === item.id) ? true : false;
   }
 
 }
-

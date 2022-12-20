@@ -7,7 +7,13 @@
     </ion-tab-button>
 
     <ion-tab-button tab="favorites">
-      <!-- <ion-badge color="danger" style="padding: 5px;">99</ion-badge> -->
+      <ion-badge color="danger" style="padding: 2px;"
+      *ngIf="favoritesQuantity > 0 && favoritesQuantity <= 99">
+        {{favoritesQuantity}}
+      </ion-badge>
+      <ion-badge color="danger" style="padding: 2px;" *ngIf="favoritesQuantity > 99">
+        +99
+      </ion-badge>
       <ion-icon name="heart"></ion-icon>
       <ion-label>Favoritos</ion-label>
     </ion-tab-button>

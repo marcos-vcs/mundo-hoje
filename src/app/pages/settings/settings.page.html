@@ -18,7 +18,36 @@
       </ion-col>
     </ion-row>
 
-    <ion-row *ngIf="itens === undefined || itens.length > 0" style="margin-top: -20px;">
+    <ion-row>
+      <ion-col class="ion-padding mt-negative-20" size="12">
+        <ion-item lines="inset" class="br-15">
+          <ion-label position="stacked" style="font-size: 14px;">Alinhamento das notícias</ion-label>
+          <ion-select [(ngModel)]="configuration.newsDetailAlign" (ionChange)="updateNewsDetailAlign()" interface="popover" placeholder="Personalize do seu jeito">
+            <ion-select-option value="text-align-left">A esquerda</ion-select-option>
+            <ion-select-option value="text-align-right">A direita</ion-select-option>
+            <ion-select-option value="text-align-justify">Justificado</ion-select-option>
+            <ion-select-option value="text-align-center">Centralizado</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="ion-padding mt-negative-20" size="12">
+        <ion-item lines="inset" class="br-15">
+          <ion-label position="stacked" style="font-size: 14px;">
+            Tamanho dos botões dos cards das noticias
+          </ion-label>
+          <ion-select [(ngModel)]="configuration.noticeCardIconsSize" (ionChange)="updateNoticeCardIconsSize()" interface="popover" placeholder="Personalize do seu jeito">
+            <ion-select-option value="small">Pequeno</ion-select-option>
+            <ion-select-option value="default">Médio</ion-select-option>
+            <ion-select-option value="large">Grande</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="itens === undefined || itens.length > 0" class="mt-negative-20">
       <ion-col class="ion-padding" size="12">
         <ion-item lines="inset" class="br-15">
           <ion-label style="font-size: 14px;">
@@ -31,13 +60,18 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col size="6">
-        <ion-button style="float: right;" [routerLink]="['']">Voltar</ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button (click)="updateConfiguration()" style="float: left;">Salvar</ion-button>
+    <ion-row class="mt-negative-20">
+      <ion-col class="ion-padding" size="12">
+        <ion-item lines="inset" class="br-15">
+          <ion-label style="font-size: 14px;">
+            Configuração padrão
+          </ion-label>
+          <ion-button (click)="recoveryConfiguration()" shape="round" size="small">
+            restaurar
+          </ion-button>
+        </ion-item>
       </ion-col>
     </ion-row>
+
   </ion-grid>
 </ion-content>

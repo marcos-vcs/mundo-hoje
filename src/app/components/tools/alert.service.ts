@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
-
- //#region variables
+  //#region variables
   private handlerMessage = false;
- //#endregion
+  //#endregion
 
-  constructor(private alertController: AlertController) { }
+  constructor(private alertController: AlertController) {}
 
   //#region methods
   async presentAlert(title: string, description: string) {
@@ -49,5 +48,4 @@ export class AlertService {
     return this.handlerMessage;
   }
   //#endregion
-
 }
