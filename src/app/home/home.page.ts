@@ -239,6 +239,7 @@ export class HomePage implements OnInit {
         item.article.text
           .split('<br>')
           .forEach((p) => item.article.textIndented.push(p));
+
         const modal = await this.modalCtrl.create({
           component: NewsDetailComponent,
           componentProps: { data: item },

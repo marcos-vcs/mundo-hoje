@@ -52,7 +52,7 @@
 
       </ion-card-subtitle>
       <ion-card-title class="ion-padding" (click)="openDetails(item)">
-        {{item.introducao}}
+        <p [class]="configuration.newsDetailAlign">{{item.introducao}}</p>
       </ion-card-title>
     </ion-card>
   </span>

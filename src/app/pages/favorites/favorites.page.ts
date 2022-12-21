@@ -92,7 +92,6 @@ export class FavoritesPage implements OnInit {
       ).toString();
       const itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
       this.news = itens;
-      console.log(itens);
     } else {
       await this.storage.openStore();
       const favorites = await (
