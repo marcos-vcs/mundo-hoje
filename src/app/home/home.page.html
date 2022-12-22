@@ -48,7 +48,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <swiper [slidesPerView]="1" [spaceBetween]="-130" []>
+  <swiper [slidesPerView]="1" [spaceBetween]="-130" [initialSlide]="1">
     <ng-template swiperSlide *ngFor="let coin of coins">
       <ion-card class="br-15 height-230-px widht-60-percent">
         <ion-card-header>
