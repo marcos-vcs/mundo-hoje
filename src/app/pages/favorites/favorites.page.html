@@ -54,7 +54,7 @@
   </ion-refresher>
 
   <span *ngIf="!loadCenter">
-    <ion-card class="mb-10" *ngFor="let item of news">
+    <ion-card class="mb-40" *ngFor="let item of news">
       <ion-card-title (click)="openDetails(item)" class="title">
         {{item.titulo}}
       </ion-card-title>
