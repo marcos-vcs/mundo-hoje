@@ -18,7 +18,7 @@ import { AboutComponent } from './components/about/about.component';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     SocialSharing,
@@ -26,7 +26,7 @@ import { AboutComponent } from './components/about/about.component';
     HttpClient,
     IbgeNoticeApiService,
     FavoritesQuantityService,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
 })
