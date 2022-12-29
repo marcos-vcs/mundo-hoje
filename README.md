@@ -1,6 +1,6 @@
 ### Mundo-hoje news app
 ___
-##### Download the latest version **[`CLICK HERE`](https://github.com/marcos-vcs/mundo-hoje/releases/tag/v1.0.0-production)**
+##### Download latest version **[`CLICK HERE`](https://github.com/marcos-vcs/mundo-hoje/releases/tag/v1.0.0-production)**
 ---
 #### Technologies used in development
 ###### Front-end
