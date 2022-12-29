@@ -233,7 +233,10 @@ export class FavoritesPage implements OnInit {
       componentProps: { data: item },
     });
     modal.present();
-    await modal.onWillDismiss();
+    const modalDismiss = await modal.onWillDismiss();
+    if(modalDismiss.data === 'cancel'){
+      this.getNotices();
+    }
   }
 
   shareNews(item: Item) {
