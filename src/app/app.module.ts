@@ -10,14 +10,15 @@ import { IbgeNoticeApiService } from './services/ibge-notice-api.service';
 import { DatePipe } from '@angular/common';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
+import { AboutComponent } from './components/about/about.component';
 
 @NgModule({
-  declarations: [AppComponent, NewsDetailComponent],
+  declarations: [AppComponent, NewsDetailComponent, AboutComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     SocialSharing,
@@ -25,7 +26,7 @@ import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
     HttpClient,
     IbgeNoticeApiService,
     FavoritesQuantityService,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
 })

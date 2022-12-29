@@ -3,6 +3,7 @@ import { Item, News } from '../models/news';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IbgeNoticeApiService } from '../services/ibge-notice-api.service';
 import {
+  ActionSheetController,
   IonInfiniteScroll,
   LoadingController,
   ModalController,
@@ -26,6 +27,10 @@ export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   errorImage = '../../../assets/no-found.png';
+  today = new Date();
+  startDate: Date;
+  endDate: Date;
+  atualFilter: string;
   configuration: Configuration;
   coins: CoinsMetadata[] = [];
   news: News = new News();
@@ -42,6 +47,7 @@ export class HomePage implements OnInit {
     private newsService: IbgeNoticeApiService,
     private storage: StorageService,
     private socialSharing: SocialSharing,
+    private actionSheetCtrl: ActionSheetController,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private favoriteQuantityService: FavoritesQuantityService,
@@ -88,16 +94,15 @@ export class HomePage implements OnInit {
     }
   }
 
-  getSearchbarValue() {
+  async getSearchbarValue() {
     this.page = 1;
     this.news.items = [];
     this.notFoundMsg = false;
     this.allLoadMsg = false;
+
     this.loadCenter = true;
-    setTimeout(() => {
-      this.findNews();
-      this.loadCenter = false;
-    }, 500);
+    this.findNews();
+    this.loadCenter = false;
   }
 
   getCoins() {
@@ -148,14 +153,53 @@ export class HomePage implements OnInit {
           this.loadCenter = false;
         },
       });
+    } else if (
+      this.startDate &&
+      this.endDate &&
+      this.atualFilter === 'period'
+    ) {
+      this.newsService.getByDate(this.startDate, this.endDate).subscribe({
+        next: (v) => {
+          this.notFoundMsg = false;
+
+          v.items.forEach(async (i) => {
+            if (i) {
+              i.photos = this.newsService.getPhotos(i.link, i.imagens);
+              i.save = await this.isFavorited(i);
+            }
+          });
+          v.items.forEach((i) => this.news.items.push(i));
+          const itensPreUpdate = this.news.items;
+          this.news = v;
+          this.news.items = itensPreUpdate;
+
+          this.notFoundMsg = this.news.count > 0 ? false : true;
+          this.allLoadMsg =
+            this.news.totalPages === this.news.page && !this.notFoundMsg
+              ? true
+              : false;
+        },
+        error: (e) => {
+          if (e.status === 0) {
+            this.page--;
+            this.toast.presentToast(
+              'Você está sem internet :(',
+              'top',
+              'danger'
+            );
+          }
+
+          this.notFoundMsg = true;
+          this.loadCenter = false;
+        },
+      });
     } else {
       this.page = 1;
       this.news.items = [];
+
       this.loadCenter = true;
-      setTimeout(() => {
-        this.getNews();
-        this.loadCenter = false;
-      }, 100);
+      this.getNews();
+      this.loadCenter = false;
     }
   }
 
@@ -218,6 +262,9 @@ export class HomePage implements OnInit {
     setTimeout(() => {
       this.page = 1;
       this.news.items = [];
+      this.startDate = null;
+      this.endDate = null;
+      this.searchValue = '';
       this.getNews();
       this.getCoins();
       event.target.complete();
@@ -239,6 +286,7 @@ export class HomePage implements OnInit {
         item.article.text
           .split('<br>')
           .forEach((p) => item.article.textIndented.push(p));
+
         const modal = await this.modalCtrl.create({
           component: NewsDetailComponent,
           componentProps: { data: item },
@@ -326,15 +374,49 @@ export class HomePage implements OnInit {
     });
   }
 
-  shareNews(item: Item){
-    this.socialSharing.share(null, null, null, item.link).then(
-      ()=>{
-        this.toast.presentToast('Notícia compartilhada com sucesso','top','success');
-    }).catch(
-      ()=>{
-        this.toast.presentToast('Erro ao compartilhar notícia','top','danger');
-      }
-      );
+  shareNews(item: Item) {
+    this.socialSharing
+      .share(null, null, null, item.link)
+      .then(() => {
+        this.toast.presentToast(
+          'Notícia compartilhada com sucesso',
+          'top',
+          'success'
+        );
+      })
+      .catch(() => {
+        this.toast.presentToast(
+          'Erro ao compartilhar notícia',
+          'top',
+          'danger'
+        );
+      });
+  }
+
+  async filterActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Selecione o filtro',
+      buttons: [
+        {
+          text: 'Filtrar por palavra chave',
+          role: 'keyword',
+        },
+        {
+          text: 'Filtrar por período',
+          role: 'period',
+        },
+      ],
+    });
+
+    await actionSheet.present();
+    const role = await actionSheet.onDidDismiss();
+    this.atualFilter = role.role !== 'backdrop' ? role.role : this.atualFilter;
+
+    if (this.atualFilter !== 'backdrop') {
+      this.startDate = null;
+      this.endDate = null;
+      this.searchValue = '';
+    }
   }
 
   private async isFavorited(item: Item): Promise<boolean> {
@@ -345,5 +427,4 @@ export class HomePage implements OnInit {
     const itens: Item[] = favorites ? (JSON.parse(favorites) as Item[]) : [];
     return itens.find((i) => i.id === item.id) ? true : false;
   }
-
 }

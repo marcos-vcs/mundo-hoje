@@ -4,11 +4,43 @@
       <img src="../../assets/icon/favicon.png">
       Mundo hoje
     </ion-title>
-
-    <ion-searchbar (ionChange)="getSearchbarValue()" [(ngModel)]="searchValue" animated="true" style="margin-top: 10px;"
-      placeholder="Buscar"></ion-searchbar>
-
+    <ion-buttons slot="end">
+      <ion-button class="btn-refresh" shape="round" color="medium" (click)="doRefresh($event)"><ion-icon
+          name="refresh-outline"></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
+  <ion-item>
+    <ion-searchbar *ngIf="atualFilter === 'keyword' || atualFilter === undefined" (ionChange)="getSearchbarValue()"
+      [(ngModel)]="searchValue" class="mt-10" placeholder="Buscar"></ion-searchbar>
+
+    <ion-item *ngIf="atualFilter === 'period'" lines="inset">
+      <ion-item style="font-weight: 400;" class="br-15" fill="solid">
+        <ion-label position="floating">Data de inicio</ion-label>
+        <ion-input value="{{ startDate | date: 'dd/MM/yyyy' }}" id="startDate"
+          (ionChange)="getSearchbarValue()"></ion-input>
+        <ion-popover trigger="startDate" size="auto">
+          <ng-template>
+            <ion-datetime presentation="startDate" [(ngModel)]="startDate" locale="pt-br"></ion-datetime>
+          </ng-template>
+        </ion-popover>
+      </ion-item>
+
+      <ion-item style="font-weight: 400;" class="br-15" fill="solid">
+        <ion-label position="floating">Data de fim</ion-label>
+        <ion-input value="{{ endDate | date: 'dd/MM/yyyy' }}" id="endDate"
+          (ionChange)="getSearchbarValue()"></ion-input>
+        <ion-popover trigger="endDate" size="auto">
+          <ng-template>
+            <ion-datetime presentation="endDate" [(ngModel)]="endDate" locale="pt-br"></ion-datetime>
+          </ng-template>
+        </ion-popover>
+      </ion-item>
+    </ion-item>
+
+    <ion-button (click)="filterActionSheet();" class="mt-10 ml-0" slot="end" shape="round" fill="outline">
+      <ion-icon style="width: 20px;" name="filter-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -16,7 +48,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <swiper [slidesPerView]="1" [spaceBetween]="-130">
+  <swiper [slidesPerView]="1" [spaceBetween]="-130" [initialSlide]="1">
     <ng-template swiperSlide *ngFor="let coin of coins">
       <ion-card class="br-15 height-230-px widht-60-percent">
         <ion-card-header>
@@ -34,32 +66,6 @@
             </ion-row>
           </ion-grid>
 
-<!--           <ion-grid [fixed]="true">
-            <ion-row>
-              <ion-col class="fw-bold">
-                <div class="fs-10">Compra:</div>
-                <span class="fs-14">R${{coin.bid}}</span>
-              </ion-col>
-              <ion-col class="fw-bold">
-                <div class="fs-10">Venda:</div>
-                <span class="fs-14">R${{coin.ask}}</span>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-
-          <ion-grid [fixed]="true" style="margin-top: -10px;">
-            <ion-row>
-              <ion-col class="fw-bold">
-                <div class="fs-10">Máximo:</div>
-                <span class="fs-14">{{coin.high | currency:'BRL'}}</span>
-              </ion-col>
-              <ion-col class="fw-bold">
-                <div class="fs-10">Mínimo:</div>
-                <span class="fs-14">{{coin.low | currency:'BRL'}}</span>
-              </ion-col>
-            </ion-row>
-          </ion-grid> -->
-
           <ion-grid [fixed]="true" style="margin-top: -10px;">
             <ion-row>
               <ion-col class="fw-bold">
@@ -67,9 +73,9 @@
                   <legend>Variação</legend>
                   R${{coin.varBid}}
                   <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;"
-                    color="success" name="trending-down-outline"></ion-icon></span>
-                <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger"
-                    name="trending-up-outline"></ion-icon></span>
+                      color="success" name="trending-down-outline"></ion-icon></span>
+                  <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger"
+                      name="trending-up-outline"></ion-icon></span>
                 </fieldset>
               </ion-col>
             </ion-row>
@@ -96,28 +102,26 @@
   </div>
 
   <span *ngIf="!loadCenter">
-    <ion-card class="mb-10" *ngFor="let item of news.items">
-      <ion-card-title (click)="openDetails(item)" class="title">
+    <ion-card class="mb-40" *ngFor="let item of news.items">
+      <ion-card-title *ngIf="item" (click)="openDetails(item)" class="title">
         {{item.titulo}}
       </ion-card-title>
-      <ion-item (click)="openDetails(item)">
+      <ion-item *ngIf="item" (click)="openDetails(item)">
         <ion-img class="mt-15" [src]="item.photos.image_intro" (ionError)="item.photos.image_intro = errorImage"
           width="100%" #img></ion-img>
       </ion-item>
 
-      <ion-card-subtitle>
+      <ion-card-subtitle *ngIf="item">
         <div>
           Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
         </div>
 
-        <div class="options-list">
+        <div class="options-list" *ngIf="item">
           <ion-button (click)="favorite(item)" id="favorite-btn" size="small" fill="clear" shape="round">
-            <span *ngIf="item.save">
-              <ion-icon [size]="configuration.noticeCardIconsSize" class="btn-red" name="heart"></ion-icon>
-            </span>
-            <span *ngIf="!item.save">
-              <ion-icon [size]="configuration.noticeCardIconsSize" class="btn-gray" name="heart"></ion-icon>
-            </span>
+            <ion-icon *ngIf="item.save" [size]="configuration.noticeCardIconsSize" class="btn-red"
+              name="heart"></ion-icon>
+            <ion-icon *ngIf="!item.save" [size]="configuration.noticeCardIconsSize" class="btn-gray"
+              name="heart"></ion-icon>
           </ion-button>
           <ion-button (click)="shareNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
             <ion-icon [size]="configuration.noticeCardIconsSize" name="share-social-outline"></ion-icon>
@@ -125,8 +129,8 @@
         </div>
 
       </ion-card-subtitle>
-      <ion-card-title [class]="configuration.newsDetailAlign" class="ion-padding" (click)="openDetails(item)">
-        <span>{{item.introducao}}</span>
+      <ion-card-title *ngIf="item" [class]="configuration.newsDetailAlign" class="ion-padding" (click)="openDetails(item)">
+        <p>{{item.introducao}}</p>
       </ion-card-title>
     </ion-card>
   </span>
@@ -140,7 +144,7 @@
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
-  <ion-content *ngIf="loadCenter">
+  <ion-content *ngIf="loadCenter" style="z-index: 99999;">
     <ion-spinner class="spinnerCenter" name="dots"></ion-spinner>
   </ion-content>
 

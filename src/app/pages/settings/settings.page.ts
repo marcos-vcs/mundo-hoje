@@ -1,10 +1,11 @@
 import { Configuration } from './../../models/configuration';
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Item } from 'src/app/models/news';
 import { ToastService } from 'src/app/components/tools/toast.service';
 import { FavoritesQuantityService } from 'src/app/services/favorites-quantity.service';
+import { AboutComponent } from 'src/app/components/about/about.component';
 
 @Component({
   selector: 'app-settings',
@@ -17,6 +18,7 @@ export class SettingsPage implements OnInit {
 
   constructor(
     private alertController: AlertController,
+    private modalCtrl: ModalController,
     private storage: StorageService,
     private favoriteQuantityService: FavoritesQuantityService,
     private toast: ToastService
@@ -146,4 +148,13 @@ export class SettingsPage implements OnInit {
       this.itens = favorites ? (JSON.parse(favorites) as Item[]) : [];
     }
   }
+
+  async about(){
+    const modal = await this.modalCtrl.create({
+      component: AboutComponent
+    });
+    modal.present();
+    await modal.onWillDismiss();
+  }
+
 }

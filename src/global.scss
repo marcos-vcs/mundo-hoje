@@ -41,8 +41,17 @@
     font-weight:bold;
     color:#fff;
   }
+  .ml-0{
+    margin-left: 0px;
+  }
   .mt-15{
     margin-top: 15px;
+  }
+  .mt-10{
+    margin-top: 10px;
+  }
+  .mt-5{
+    margin-top: 5px;
   }
   .mb-5{
     margin-bottom: 5px;
@@ -68,8 +77,11 @@
   .height-230-px{
     height: 230px;
   }
-  .mb-10{
+  .mb-40{
     margin-bottom: 40px;
+  }
+  .mb-50{
+    margin-bottom: 50px;
   }
   .fs-10{
     font-size: 10px;
@@ -94,4 +106,9 @@
 }
 .text-align-center{
   text-align: center;
+}
+.align-center{
+  display: block;
+  text-align: center;
+  margin: auto;
 }

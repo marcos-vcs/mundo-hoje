@@ -37,6 +37,7 @@ export class IbgeNoticeApiService {
   }
 
   private getFormattedDate(date: Date){
+    date = new Date(date);
     const year = date.getFullYear();
     let month = (1 + date.getMonth()).toString();
     month = month.length > 1 ? month : '0' + month;

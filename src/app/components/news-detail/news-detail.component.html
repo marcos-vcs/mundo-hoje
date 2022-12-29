@@ -10,14 +10,31 @@
 <ion-content class="ion-padding">
   <div id="title">{{data.article.title}}</div>
   <div id="subtitle">{{data.article.subtitle}}</div>
-  <div><ion-img style="margin-top:10px;margin-bottom: 5px;" [src]="data.photos.image_fulltext" (ionError)="data.photos.image_intro = errorImage"></ion-img></div>
+  <div><img style="margin-top:10px;margin-bottom: 5px;" [src]="data.photos.image_fulltext" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%"></div>
   <div id="publicacao-date">
     <div id="metadatas">{{data.article.metadata}}</div>
     Publicado em: {{data.data_publicacao.toString().split(' ')[0]}}
   </div>
 
-  <div id="article" *ngFor="let text of data.article.textIndented">
+  <div id="article" class="mb-50" *ngFor="let text of data.article.textIndented">
     <p [class]="configuration.newsDetailAlign">{{text}}</p>
   </div>
 
 </ion-content>
+
+<ion-fab slot="fixed" horizontal="end" vertical="bottom">
+  <ion-fab-button>
+    <ion-icon name="grid-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button (click)="favorite(data)">
+      <ion-icon *ngIf="data.save" [size]="configuration.noticeCardIconsSize" class="btn-red"
+      name="heart"></ion-icon>
+      <ion-icon *ngIf="!data.save" [size]="configuration.noticeCardIconsSize" class="btn-gray"
+      name="heart"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button (click)="shareNews(data)">
+      <ion-icon [size]="configuration.noticeCardIconsSize" name="share-social-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
