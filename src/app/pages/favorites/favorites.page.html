@@ -55,20 +55,20 @@
 
   <span *ngIf="!loadCenter">
     <ion-card class="mb-40" *ngFor="let item of news">
-      <ion-card-title (click)="openDetails(item)" class="title">
+      <ion-card-title *ngIf="item" (click)="openDetails(item)" class="title">
         {{item.titulo}}
       </ion-card-title>
-      <ion-item (click)="openDetails(item)">
+      <ion-item *ngIf="item" (click)="openDetails(item)">
         <ion-img class="mt-15" [src]="item.photos.image_intro" (ionError)="item.photos.image_intro = errorImage"
           width="100%"></ion-img>
       </ion-item>
 
-      <ion-card-subtitle>
+      <ion-card-subtitle *ngIf="item">
         <div>
           Publicado em: {{item.data_publicacao.toString().split(' ')[0]}}
         </div>
 
-        <div class="options-list">
+        <div class="options-list" *ngIf="item">
           <ion-button (click)="removeNews(item)" id="favorite-btn" size="small" fill="clear" shape="round">
             <ion-icon *ngIf="item.save" [size]="configuration.noticeCardIconsSize " class="btn-red"
               name="heart"></ion-icon>
@@ -81,7 +81,7 @@
         </div>
 
       </ion-card-subtitle>
-      <ion-card-title class="ion-padding" (click)="openDetails(item)">
+      <ion-card-title *ngIf="item" class="ion-padding" (click)="openDetails(item)">
         <p [class]="configuration.newsDetailAlign ?? 'text-align-left'">{{item.introducao}}</p>
       </ion-card-title>
     </ion-card>
