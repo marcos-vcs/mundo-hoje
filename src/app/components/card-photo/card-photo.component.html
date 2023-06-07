@@ -1,0 +1,6 @@
+<div class="img-container" *ngIf="loading">
+  <ion-skeleton-text id="skeleton" [animated]="true"></ion-skeleton-text>
+</div>
+<div class="img-container" [hidden]="loading">
+  <img *ngIf="photoUrl" [src]="photoUrl" (load)="onPhotoLoad()" (error)="onPhotoError()"/>
+</div>

@@ -21,8 +21,9 @@ import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
+
 export class HomePage implements OnInit {
   //#region variaveis
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;

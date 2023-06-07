@@ -10,7 +10,9 @@
 <ion-content class="ion-padding">
   <div id="title">{{data.article.title}}</div>
   <div id="subtitle">{{data.article.subtitle}}</div>
-  <div><img style="margin-top:10px;margin-bottom: 5px;" [src]="data.photos.image_fulltext" onerror="this.onerror=null;this.src='../../../assets/no-found.png'" width="100%"></div>
+  <div>
+    <app-card-photo [photoUrl]="data.photos.image_fulltext"></app-card-photo>
+  </div>
   <div id="publicacao-date">
     <div id="metadatas">{{data.article.metadata}}</div>
     Publicado em: {{data.data_publicacao.toString().split(' ')[0]}}
