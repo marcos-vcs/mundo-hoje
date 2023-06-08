@@ -19,7 +19,7 @@ import { StorageService } from 'src/app/services/storage.service';
 })
 export class FavoritesPage implements OnInit {
   //#region variaveis
-  configuration: Configuration;
+  configuration: Configuration = new Configuration();
   news: Item[] = [];
   atualFilter: string;
   searchValue = '';
@@ -121,7 +121,6 @@ export class FavoritesPage implements OnInit {
         this.startDate.setDate(this.startDate.getDate() + 1);
         intervalos.push(this.getFormattedDate(this.startDate));
       }
-      console.log(intervalos);
       this.news = this.news.filter((f) => {
         intervalos.includes(f.data_publicacao);
       });

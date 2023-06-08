@@ -32,7 +32,7 @@ export class HomePage implements OnInit {
   startDate: Date;
   endDate: Date;
   atualFilter: string;
-  configuration: Configuration;
+  configuration: Configuration = new Configuration();
   coins: CoinsMetadata[] = [];
   news: News = new News();
   searchValue = '';

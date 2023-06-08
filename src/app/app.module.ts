@@ -11,7 +11,7 @@ import { DatePipe } from '@angular/common';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { AboutComponent } from './components/about/about.component';
-import { CardPhotoModule } from "./components/card-photo/card-photo.module";
+import { CardPhotoModule } from './components/card-photo/card-photo.module';
 
 @NgModule({
     declarations: [
