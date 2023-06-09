@@ -73,8 +73,8 @@
                   <legend>Variação</legend>
                   R${{coin.varBid}}
                   <span *ngIf="coin.varBid < '0'">&nbsp;<ion-icon style="font-size: 17px; margin-bottom: -2px;"
-                      color="success" name="trending-down-outline"></ion-icon></span>
-                  <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="danger"
+                      color="danger" name="trending-down-outline"></ion-icon></span>
+                  <span *ngIf="coin.varBid > '0'">&nbsp;<ion-icon color="success"
                       name="trending-up-outline"></ion-icon></span>
                 </fieldset>
               </ion-col>
@@ -107,8 +107,7 @@
         {{item.titulo}}
       </ion-card-title>
       <ion-item *ngIf="item" (click)="openDetails(item)">
-        <ion-img class="mt-15" [src]="item.photos.image_intro" (ionError)="item.photos.image_intro = errorImage"
-          width="100%" #img></ion-img>
+          <app-card-photo [photoUrl]="item.photos.image_intro"></app-card-photo>
       </ion-item>
 
       <ion-card-subtitle *ngIf="item">
